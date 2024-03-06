@@ -1,11 +1,17 @@
 import { createRouter, createWebHistory } from "vue-router";
-import WorkFlows from "@/views/WorkFlows.vue";
+import WorkFlows from "../views/WorkFlows.vue";
+import Pricings from "../views/Pricings.vue";
 
 const routes = [
   {
     path: "/workflows",
     name: "WorkFlows",
     component: WorkFlows,
+  },
+  {
+    path: "/workflows/example",
+    name: "Pricings",
+    component: Pricings,
   },
 ];
 
