@@ -106,15 +106,16 @@
           </template>
         </v-card>
         <template v-if="isIndividualPlan">
-          <div v-for="n in store.insurance.traveller" :key="n">
+          <div v-for="n in store.insurance.traveller - 1" :key="n">
             <InsuredForm
-              v-model="store.insureds.traveller[n]"
+              v-if="store.insureds.travellers[n - 1]"
+              v-model="store.insureds.travellers[n - 1]"
               :index="n + 1"
             ></InsuredForm>
           </div>
         </template>
         <template v-else>
-          <div v-for="n in store.insurance.adults" :key="n">
+          <div v-for="n in store.insurance.adults - 1" :key="n">
             <InsuredForm
               v-if="store.insureds.adults[n - 1]"
               :type="'Adult'"
@@ -171,7 +172,7 @@ onBeforeMount(() => {
   if (isIndividualPlan.value) {
     const travellers = store.insureds.travellers?.sort() || [];
     const list = [];
-    for (let index = 0; index < store.insurance?.traveller; index++) {
+    for (let index = 0; index < store.insurance?.traveller - 1; index++) {
       const existed = travellers[index];
       const traveller = {
         id: existed?.id || uuid(),
@@ -185,7 +186,7 @@ onBeforeMount(() => {
   } else {
     const adults = store.insureds.adults?.sort() || [];
     const adultList = [];
-    for (let index = 0; index < store.insurance?.adults; index++) {
+    for (let index = 0; index < store.insurance?.adults - 1; index++) {
       const existed = adults[index];
       const adult = {
         id: existed?.id || uuid(),
