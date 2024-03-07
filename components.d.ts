@@ -13,6 +13,7 @@ declare module 'vue' {
     DestinationSelect: typeof import('./src/components/DestinationSelect.vue')['default']
     Header: typeof import('./src/components/Header.vue')['default']
     InsuredCountInput: typeof import('./src/components/InsuredCountInput.vue')['default']
+    InsuredForm: typeof import('./src/components/InsuredForm.vue')['default']
     NotFound: typeof import('./src/components/NotFound.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

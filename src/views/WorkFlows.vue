@@ -14,12 +14,13 @@
           <VGroupItems label="Select type of insurance">
             <v-item-group
               class="d-flex justify-space-around flex-row"
-              v-model="store.insurance.typeOfInsuranceTrip"
+              v-model="tripType"
             >
               <v-item v-slot="{ isSelected, toggle }">
                 <v-card
                   :class="['d-flex align-center pa-4']"
                   min-height="191"
+                  :color="isSelected ? 'white' : 'grey-lighten-3'"
                   dark
                   @click="toggle"
                 >
@@ -51,6 +52,7 @@
                 <v-card
                   :class="['d-flex align-center pa-4']"
                   min-height="191"
+                  :color="isSelected ? 'white' : 'grey-lighten-3'"
                   dark
                   @click="toggle"
                 >
@@ -83,7 +85,12 @@
             </v-item-group>
           </VGroupItems>
           <!-- destination  -->
-          <template v-if="!store.insurance.typeOfInsuranceTrip">
+          <template
+            v-if="
+              !store.insurance.typeOfInsuranceTrip ||
+              store.insurance.typeOfInsuranceTrip === 'single'
+            "
+          >
             <VGroupItems label="Where will you travel">
               <DestinationSelect v-model="store.insurance.destination" />
             </VGroupItems>
@@ -115,7 +122,7 @@
                 <v-icon size="small"> check_circle_outline </v-icon>
                 <p class="insuredDays ml-2">
                   You will be insured for
-                  <span class="font-weight-bold">{{ "7" }} days</span>
+                  <span class="font-weight-bold">{{ numberOfDays }} days</span>
                 </p>
               </v-row>
             </VGroupItems>
@@ -148,21 +155,23 @@
         <h3 class="text-center color-blue header">Who will travel?</h3>
         <v-container fluid>
           <VGroupItems label="Select type of insurance">
-            <TypeInsurance v-model="store.insurance.typeOfInsurance" />
+            <TypeInsurance v-model="insuredsType" />
           </VGroupItems>
           <InsuredCountInput
-            v-if="store.insurance.typeOfInsurance === 0"
+            v-if="store.insurance.typeOfInsurance === 'individual'"
             label="Traveller"
             v-model="store.insurance.traveller"
           />
-          <template v-if="store.insurance.typeOfInsurance === 1">
+          <template v-if="store.insurance.typeOfInsurance === 'family'">
             <InsuredCountInput
               label="Adults"
               v-model="store.insurance.adults"
+              :max="2"
             />
             <InsuredCountInput
               label="Children (0 -18)"
               v-model="store.insurance.children"
+              :max="7"
             />
           </template>
           <VGroupItems label="Email address">
@@ -191,21 +200,35 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, watch } from "vue";
+import { reactive, watch, computed, ref, onBeforeMount } from "vue";
 import Header from "../components/Header.vue";
 import DestinationSelect from "@/components/DestinationSelect.vue";
 import moment from "moment";
 import TypeInsurance from "@/components/TypeInsurance.vue";
 import InsuredCountInput from "@/components/InsuredCountInput.vue";
 import VTextInput from "@/components/VTextInput.vue";
-import { useInformationStore } from "../stores/InformationStore";
+import {
+  useInformationStore,
+  TripType,
+  InsuredType,
+} from "../stores/InformationStore";
 import { useRouter } from "vue-router";
 import AreaSelect from "@/components/AreaSelect.vue";
+import { set } from "lodash";
 const store = useInformationStore();
 const router = useRouter();
 
+const tripType = ref();
+const insuredsType = ref();
+
 const minDate = moment().toDate();
 const maxDate = moment(store.insurance.startDate).add(185, "day").toDate();
+
+const numberOfDays = computed(() =>
+  moment
+    .duration(moment(store.insurance.startDate)?.diff(store.insurance.endDate))
+    .asDays()
+);
 
 const handleNext = () => {
   store.insurance = { ...store.insurance };
@@ -224,6 +247,38 @@ watch(
     immediate: true,
   }
 );
+
+watch(
+  () => tripType.value,
+  (v) => {
+    if (v === undefined || v === null)
+      set(store.insurance, "typeOfInsuranceTrip", undefined);
+    set(store.insurance, "typeOfInsuranceTrip", TripType[v]);
+  }
+);
+
+watch(
+  () => insuredsType.value,
+  (v) => {
+    if (v === undefined || v === null)
+      set(store.insurance, "typeOfInsurance", undefined);
+    else set(store.insurance, "typeOfInsurance", InsuredType[v]);
+  }
+);
+
+onBeforeMount(() => {
+  if (store.insurance?.typeOfInsuranceTrip !== undefined) {
+    if (store.insurance?.typeOfInsuranceTrip === "single") tripType.value = 0;
+    else tripType.value = 1;
+  }
+  if (store.insurance?.typeOfInsurance !== undefined) {
+    {
+      if (store.insurance?.typeOfInsurance === "individual")
+        insuredsType.value = 0;
+      else insuredsType.value = 1;
+    }
+  }
+});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -234,6 +289,7 @@ watch(
   background-size: 100%;
   background-position: top;
   height: 100%;
+  background-attachment: fixed;
 }
 
 .header {

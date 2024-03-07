@@ -6,7 +6,7 @@
         :model-value="formattedDate"
         readonly
         v-bind="props"
-        variant="solo"
+        variant="outlined"
         hide-details
       ></v-text-field>
     </template>

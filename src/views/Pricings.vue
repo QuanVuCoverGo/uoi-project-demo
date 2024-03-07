@@ -8,7 +8,7 @@
       <v-btn
         size="x-large"
         prepend-icon="arrow_back"
-        variant="outlined"
+        variant="text"
         color="primary"
         class="text-none"
         @click="$router.back()"
@@ -368,6 +368,7 @@
             size="x-large"
             prepend-icon="arrow_forward"
             color="primary"
+            @click="$router.push({ name: 'ApplicantInformation' })"
             >Continue</v-btn
           >
         </div>
@@ -487,7 +488,7 @@ const items = [
 
 const discountValue = computed(() => {
   if (!promodeCode.value) return 0;
-  const isSingle = insuranceStore.insurance?.typeOfInsuranceTrip === 0;
+  const isSingle = insuranceStore.insurance?.typeOfInsuranceTrip === "single";
   return isSingle ? 40 : 25;
 });
 

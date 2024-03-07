@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import WorkFlows from "../views/WorkFlows.vue";
 import Pricings from "../views/Pricings.vue";
+import ApplicantInformation from "../views/ApplicantInformation.vue";
 
 const routes = [
   {
@@ -16,6 +17,11 @@ const routes = [
     path: "/workflows/example",
     name: "Pricings",
     component: Pricings,
+  },
+  {
+    path: "/workflows/applicant-information",
+    name: "ApplicantInformation",
+    component: ApplicantInformation,
   },
 ];
 

@@ -6,35 +6,83 @@ import { defineStore } from "pinia";
 // the first argument is a unique id of the store across your application
 
 export type InsuranceInfo = {
-  typeOfInsuranceTrip?: number;
-  destination: string;
+  typeOfInsuranceTrip?: string;
+  destination?: string;
   startDate?: Date;
   endDate?: Date;
-  typeOfInsurance?: number;
+  typeOfInsurance?: string;
   traveller: number;
   adults: number;
   children: number;
   email: string;
   area?: string;
 };
+export type BasicInfo = {
+  fullName: string;
+  dateOfBirth: string;
+  NRICorPassport: string;
+};
+
+export type InsuredAddress = {
+  floorOrUnitNumber: string;
+  block: string;
+  building: string;
+  street: string;
+  postalCode: string;
+};
+
+export type InsuredInfo = BasicInfo & {
+  address: InsuredAddress;
+  email: string;
+  travellers: BasicInfo[];
+  adults: BasicInfo[];
+  children: BasicInfo[];
+};
 
 export type InformationState = {
   insurance: InsuranceInfo;
+  insureds: InsuredInfo;
 };
+
+export enum TripType {
+  "single",
+  "annualMulti",
+}
+
+export enum InsuredType {
+  "individual",
+  "family",
+}
 
 export const useInformationStore = defineStore("informations", {
   state: (): InformationState => ({
     insurance: {
       typeOfInsuranceTrip: undefined,
-      destination: "",
+      destination: undefined,
       startDate: undefined,
       endDate: undefined,
       typeOfInsurance: undefined,
-      traveller: 0,
-      adults: 0,
-      children: 0,
+      traveller: 1,
+      adults: 1,
+      children: 1,
       email: "",
       area: undefined,
+    },
+    insureds: {
+      fullName: "",
+      dateOfBirth: "",
+      NRICorPassport: "",
+      address: {
+        floorOrUnitNumber: "",
+        block: "",
+        building: "",
+        street: "",
+        postalCode: "",
+      },
+      email: "",
+      travellers: [],
+      adults: [],
+      children: [],
     },
   }),
 });

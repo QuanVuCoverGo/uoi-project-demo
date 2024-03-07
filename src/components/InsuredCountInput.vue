@@ -6,9 +6,19 @@
       </v-col>
       <v-col>
         <v-row class="ga-4">
-          <v-btn :disabled="count === 0" @click="descrease()">-</v-btn>
+          <v-btn
+            variant="outlined"
+            :disabled="count === (min || 1)"
+            @click="descrease()"
+            >-</v-btn
+          >
           <p class="label pt-2">{{ count }}</p>
-          <v-btn :disabled="count === 8" @click="increase()">+</v-btn>
+          <v-btn
+            variant="outlined"
+            :disabled="count === (max || 8)"
+            @click="increase()"
+            >+</v-btn
+          >
         </v-row>
       </v-col>
     </v-row>
@@ -17,13 +27,12 @@
 
 <script setup>
 import { ref, computed, watch, defineProps, defineEmits } from "vue";
+import { useVModel } from "@/composables/useVModel";
 
-const { label, color, modelValue } = defineProps([
-  "label",
-  "color",
-  "modelValue",
-]);
+const props = defineProps(["label", "color", "modelValue", "min", "max"]);
+const { label, color, modelValue, min, max } = props;
 const emit = defineEmits("update:modelValue");
+const count = useVModel(props, "modelValue", emit);
 
 const increase = () => {
   count.value = count.value + 1;
@@ -31,12 +40,6 @@ const increase = () => {
 const descrease = () => {
   count.value = count.value - 1;
 };
-
-const count = ref(1);
-
-watch(count, (newValue) => {
-  emit("update:modelValue", newValue);
-});
 </script>
 <style>
 .v-overlay__content:has(> .v-date-picker) {
