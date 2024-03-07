@@ -226,7 +226,7 @@ const maxDate = moment(store.insurance.startDate).add(185, "day").toDate();
 
 const numberOfDays = computed(() =>
   moment
-    .duration(moment(store.insurance.startDate)?.diff(store.insurance.endDate))
+    .duration(moment(store.insurance.endDate)?.diff(store.insurance.startDate))
     .asDays()
 );
 
