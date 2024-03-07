@@ -7,7 +7,8 @@
         readonly
         v-bind="props"
         variant="outlined"
-        hide-details
+        :disabled="disabled"
+        :rules="rules"
       ></v-text-field>
     </template>
     <v-date-picker
@@ -31,6 +32,8 @@ const props = defineProps([
   "modelValue",
   "minDate",
   "maxDate",
+  "disabled",
+  "rules",
 ]);
 const emit = defineEmits("update:modelValue");
 

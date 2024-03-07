@@ -57,11 +57,11 @@ export enum InsuredType {
 export const useInformationStore = defineStore("informations", {
   state: (): InformationState => ({
     insurance: {
-      typeOfInsuranceTrip: undefined,
+      typeOfInsuranceTrip: "single",
       destination: undefined,
       startDate: undefined,
       endDate: undefined,
-      typeOfInsurance: undefined,
+      typeOfInsurance: "individual",
       traveller: 1,
       adults: 1,
       children: 1,

@@ -4,7 +4,7 @@
     class="d-flex align-center justify-center flex-column main ga-10"
     style="min-height: 300px"
   >
-    <v-form class="d-flex flex-column">
+    <v-form class="d-flex flex-column" @submit.prevent="handleNext">
       <v-card
         width="800"
         class="d-flex flex-column justify-center self-center pa-10 mb-10"
@@ -18,11 +18,11 @@
             >
               <v-item v-slot="{ isSelected, toggle }">
                 <v-card
-                  :class="['d-flex align-center pa-4']"
+                  :class="['d-flex align-center pa-4 card-no-shadow']"
                   min-height="191"
                   :color="isSelected ? 'white' : 'grey-lighten-3'"
                   dark
-                  @click="toggle"
+                  @click="!isSelected && toggle?.()"
                 >
                   <v-icon
                     v-if="isSelected"
@@ -50,11 +50,11 @@
               </v-item>
               <v-item v-slot="{ isSelected, toggle }">
                 <v-card
-                  :class="['d-flex align-center pa-4']"
+                  :class="['d-flex align-center pa-4 card-no-shadow']"
                   min-height="191"
                   :color="isSelected ? 'white' : 'grey-lighten-3'"
                   dark
-                  @click="toggle"
+                  @click="!isSelected && toggle?.()"
                 >
                   <v-icon
                     v-if="isSelected"
@@ -85,66 +85,71 @@
             </v-item-group>
           </VGroupItems>
           <!-- destination  -->
-          <template
-            v-if="
-              !store.insurance.typeOfInsuranceTrip ||
+          <VGroupItems
+            v-if="store.insurance.typeOfInsuranceTrip === 'single'"
+            label="Where will you travel"
+          >
+            <DestinationSelect
+              :rules="getRequiredRules('Destination')"
+              v-model="store.insurance.destination"
+            />
+          </VGroupItems>
+          <VGroupItems v-else label="Select area">
+            <AreaSelect
+              :rules="getRequiredRules('Area')"
+              v-model="store.insurance.area"
+            />
+          </VGroupItems>
+          <VGroupItems
+            :label="
               store.insurance.typeOfInsuranceTrip === 'single'
+                ? 'When will you travel?'
+                : 'When will your insurance start?'
             "
           >
-            <VGroupItems label="Where will you travel">
-              <DestinationSelect v-model="store.insurance.destination" />
-            </VGroupItems>
-            <VGroupItems label="When will you travel?">
-              <v-row class="w-75">
-                <v-col>
-                  <date-picker
-                    label="Start Date"
-                    v-model="store.insurance.startDate"
-                    color="primary"
-                    :minDate="minDate"
-                  />
-                </v-col>
-                <v-col>
-                  <date-picker
-                    label="End Date"
-                    v-model="store.insurance.endDate"
-                    color="primary"
-                    :maxDate="maxDate"
-                /></v-col>
-              </v-row>
-              <v-row
-                v-if="
-                  Boolean(store.insurance.startDate) &&
-                  Boolean(store.insurance.endDate)
-                "
-                class="bg-grey-lighten-3 w-auto pa-2 fit-content"
+            <v-row class="w-75">
+              <v-col>
+                <date-picker
+                  label="Start Date"
+                  v-model="store.insurance.startDate"
+                  color="primary"
+                  :minDate="minDate"
+                  :rules="getRequiredRules('Start date')"
+                />
+              </v-col>
+              <v-col>
+                <date-picker
+                  :disabled="
+                    store.insurance.typeOfInsuranceTrip === 'annualMulti'
+                  "
+                  label="End Date"
+                  v-model="store.insurance.endDate"
+                  color="primary"
+                  :maxDate="maxDate"
+                  :rules="getRequiredRules('End Date')"
+              /></v-col>
+            </v-row>
+            <v-row
+              v-if="
+                Boolean(store.insurance.startDate) &&
+                Boolean(store.insurance.endDate)
+              "
+              class="bg-grey-lighten-3 w-auto pa-2 fit-content"
+            >
+              <v-icon size="small"> check_circle_outline </v-icon>
+              <p
+                v-if="store.insurance.typeOfInsuranceTrip === 'single'"
+                class="insuredDays ml-2"
               >
-                <v-icon size="small"> check_circle_outline </v-icon>
-                <p class="insuredDays ml-2">
-                  You will be insured for
-                  <span class="font-weight-bold">{{ numberOfDays }} days</span>
-                </p>
-              </v-row>
-            </VGroupItems>
-          </template>
-          <template v-else>
-            <VGroupItems label="Select area">
-              <AreaSelect v-model="store.insurance.area" />
-            </VGroupItems>
-            <VGroupItems label="When will your insurance start?">
-              <v-row class="w-75">
-                <v-col>
-                  <date-picker
-                    label="Start Date"
-                    v-model="store.insurance.startDate"
-                    color="primary"
-                    :minDate="minDate"
-                  />
-                </v-col>
-                <v-col></v-col>
-              </v-row>
-            </VGroupItems>
-          </template>
+                You will be insured for
+                <span class="font-weight-bold">{{ numberOfDays }} days</span>
+              </p>
+              <p v-else class="insuredDays ml-2">
+                Includes unlimited trips in 365 days not longer than 90 days
+              </p>
+            </v-row>
+          </VGroupItems>
+
           <!-- end of destination  -->
         </v-container>
       </v-card>
@@ -177,6 +182,7 @@
           <VGroupItems label="Email address">
             <v-text-field
               type="email"
+              :rules="emailRules"
               v-model="store.insurance.email"
               variant="outlined"
             />
@@ -188,7 +194,7 @@
         variant="elevated"
         size="x-large"
         class="mt-2 align-self-center bg-blue-darken-2"
-        @click="handleNext"
+        type="submit"
       >
         <template v-slot:prepend>
           <v-icon>arrow_forward</v-icon>
@@ -215,6 +221,8 @@ import {
 import { useRouter } from "vue-router";
 import AreaSelect from "@/components/AreaSelect.vue";
 import { set } from "lodash";
+import { emailRules, getRequiredRules } from "@/composables/rules";
+
 const store = useInformationStore();
 const router = useRouter();
 
@@ -231,6 +239,8 @@ const numberOfDays = computed(() =>
 );
 
 const handleNext = () => {
+  if (!store.insurance.email || !/.+@.+\..+/.test(store.insurance.email))
+    return;
   store.insurance = { ...store.insurance };
   router.push({ name: "Pricings" });
 };
@@ -239,7 +249,9 @@ watch(
   () => store.insurance.startDate,
   (v) => {
     if (v) {
-      store.insurance.endDate = moment(v).add(7, "day").toDate();
+      if (store.insurance.typeOfInsuranceTrip === "single")
+        store.insurance.endDate = moment(v).add(7, "day").toDate();
+      else store.insurance.endDate = moment(v).add(365, "day").toDate();
     }
   },
   {
@@ -324,5 +336,10 @@ onBeforeMount(() => {
 
 .v-btn--block {
   min-width: 0 !important;
+}
+
+.card-no-shadow {
+  box-shadow: none;
+  border: 1px solid #0000002e;
 }
 </style>

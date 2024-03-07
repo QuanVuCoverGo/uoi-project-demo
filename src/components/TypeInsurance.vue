@@ -6,11 +6,11 @@
     >
       <v-item v-slot="{ isSelected, toggle }">
         <v-card
-          :class="['d-flex align-center pa-4']"
+          :class="['d-flex align-center pa-4 card-no-shadow']"
           height="191"
           :color="isSelected ? 'white' : 'grey-lighten-3'"
           dark
-          @click="toggle"
+          @click="!isSelected && toggle?.()"
         >
           <v-icon
             v-if="isSelected"
@@ -39,11 +39,11 @@
       </v-item>
       <v-item v-slot="{ isSelected, toggle }">
         <v-card
-          :class="['d-flex align-center pa-4']"
+          :class="['d-flex align-center pa-4 card-no-shadow']"
           height="191"
           :color="isSelected ? 'white' : 'grey-lighten-3'"
           dark
-          @click="toggle"
+          @click="!isSelected && toggle?.()"
         >
           <v-icon
             v-if="isSelected"

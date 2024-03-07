@@ -18,7 +18,6 @@
         <h3 class="text-left color-blue header mb-10">Who will be insured</h3>
       </div>
       <div class="d-flex flex-column justify-center align-center ga-16">
-        <!-- applicant card  -->
         <v-card style="padding: 30px 70px" class="applicant-card">
           <template v-slot:title>
             <div class="card-padding">
@@ -154,6 +153,7 @@
           >
         </div>
       </div>
+      <!-- applicant card  -->
     </v-container>
   </v-main>
 </template>
