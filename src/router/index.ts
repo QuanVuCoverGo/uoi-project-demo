@@ -4,6 +4,10 @@ import Pricings from "../views/Pricings.vue";
 
 const routes = [
   {
+    path: "/",
+    redirect: { path: "/workflows" },
+  },
+  {
     path: "/workflows",
     name: "WorkFlows",
     component: WorkFlows,

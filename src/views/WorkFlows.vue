@@ -82,41 +82,63 @@
               </v-item>
             </v-item-group>
           </VGroupItems>
-          <VGroupItems label="Where will you travel">
-            <DestinationSelect v-model="store.insurance.destination" />
-          </VGroupItems>
-          <VGroupItems label="When will you travel?">
-            <v-row class="w-75">
-              <v-col>
-                <date-picker
-                  label="Start Date"
-                  v-model="store.insurance.startDate"
-                  color="primary"
-                  :minDate="minDate"
-                />
-              </v-col>
-              <v-col>
-                <date-picker
-                  label="End Date"
-                  v-model="store.insurance.endDate"
-                  color="primary"
-                  :maxDate="maxDate"
-              /></v-col>
-            </v-row>
-            <v-row
-              v-if="
-                Boolean(store.insurance.startDate) &&
-                Boolean(store.insurance.endDate)
-              "
-              class="bg-grey-lighten-3 w-auto pa-2 fit-content"
-            >
-              <v-icon size="small"> check_circle_outline </v-icon>
-              <p class="insuredDays ml-2">
-                You will be insured for
-                <span class="font-weight-bold">{{ "7" }} days</span>
-              </p>
-            </v-row>
-          </VGroupItems>
+          <!-- destination  -->
+          <template v-if="!store.insurance.typeOfInsuranceTrip">
+            <VGroupItems label="Where will you travel">
+              <DestinationSelect v-model="store.insurance.destination" />
+            </VGroupItems>
+            <VGroupItems label="When will you travel?">
+              <v-row class="w-75">
+                <v-col>
+                  <date-picker
+                    label="Start Date"
+                    v-model="store.insurance.startDate"
+                    color="primary"
+                    :minDate="minDate"
+                  />
+                </v-col>
+                <v-col>
+                  <date-picker
+                    label="End Date"
+                    v-model="store.insurance.endDate"
+                    color="primary"
+                    :maxDate="maxDate"
+                /></v-col>
+              </v-row>
+              <v-row
+                v-if="
+                  Boolean(store.insurance.startDate) &&
+                  Boolean(store.insurance.endDate)
+                "
+                class="bg-grey-lighten-3 w-auto pa-2 fit-content"
+              >
+                <v-icon size="small"> check_circle_outline </v-icon>
+                <p class="insuredDays ml-2">
+                  You will be insured for
+                  <span class="font-weight-bold">{{ "7" }} days</span>
+                </p>
+              </v-row>
+            </VGroupItems>
+          </template>
+          <template v-else>
+            <VGroupItems label="Select area">
+              <AreaSelect v-model="store.insurance.area" />
+            </VGroupItems>
+            <VGroupItems label="When will your insurance start?">
+              <v-row class="w-75">
+                <v-col>
+                  <date-picker
+                    label="Start Date"
+                    v-model="store.insurance.startDate"
+                    color="primary"
+                    :minDate="minDate"
+                  />
+                </v-col>
+                <v-col></v-col>
+              </v-row>
+            </VGroupItems>
+          </template>
+          <!-- end of destination  -->
         </v-container>
       </v-card>
       <v-card
@@ -136,11 +158,11 @@
           <template v-if="store.insurance.typeOfInsurance === 1">
             <InsuredCountInput
               label="Adults"
-              v-model="store.insurance.traveller"
+              v-model="store.insurance.adults"
             />
             <InsuredCountInput
               label="Children (0 -18)"
-              v-model="store.insurance.traveller"
+              v-model="store.insurance.children"
             />
           </template>
           <VGroupItems label="Email address">
@@ -155,6 +177,7 @@
 
       <v-btn
         variant="elevated"
+        size="x-large"
         class="mt-2 align-self-center bg-blue-darken-2"
         @click="handleNext"
       >
@@ -177,6 +200,7 @@ import InsuredCountInput from "@/components/InsuredCountInput.vue";
 import VTextInput from "@/components/VTextInput.vue";
 import { useInformationStore } from "../stores/InformationStore";
 import { useRouter } from "vue-router";
+import AreaSelect from "@/components/AreaSelect.vue";
 const store = useInformationStore();
 const router = useRouter();
 

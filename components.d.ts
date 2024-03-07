@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AreaSelect: typeof import('./src/components/AreaSelect.vue')['default']
     BuilderContent: typeof import('./src/components/BuilderContent.vue')['default']
     CardItem: typeof import('./src/components/CardItem.vue')['default']
     copy: typeof import('./src/components/VDateInput copy.vue')['default']
