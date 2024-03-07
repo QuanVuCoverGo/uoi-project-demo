@@ -516,7 +516,7 @@ const handleRedeem = () => {
     planPrice.preferred - (planPrice.preferred * discountValue.value) / 100;
 };
 
-const selectedPlan = ref();
+const selectedPlan = ref("essential");
 
 const getToolTip = (value: string) => {
   return items.find((item) => item.name === value)?.tooltip || "";
