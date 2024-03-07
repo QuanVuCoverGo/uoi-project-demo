@@ -73,7 +73,7 @@ import { useVModel } from "@/composables/useVModel";
 
 const props = defineProps({
   label: { type: String, default: "Select" },
-  modelValue: { type: Object },
+  modelValue: { type: Number },
   showLabel: { type: Boolean, default: false },
 });
 

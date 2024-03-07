@@ -27,7 +27,7 @@ import { defineProps, defineEmits } from "vue";
 
 const props = defineProps({
   label: { type: String, default: "Select" },
-  modelValue: { type: Object },
+  modelValue: { type: String },
   showLabel: { type: Boolean, default: false },
 });
 

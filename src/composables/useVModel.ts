@@ -1,7 +1,7 @@
 import { computed } from "vue";
 
 export function useVModel<T>(
-  props,
+  props: any,
   propName: string,
   emit: (...args: any[]) => void
 ) {

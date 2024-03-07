@@ -8,7 +8,7 @@
       <v-btn
         size="x-large"
         prepend-icon="arrow_back"
-        variant="outline"
+        variant="outlined"
         color="primary"
         class="text-none"
         @click="$router.back()"
@@ -191,7 +191,7 @@
                 <p class="link-text">Full details</p>
               </v-btn>
               <div class="d-flex justify-center align-center ga-2">
-                <p :class="isApplied ? costPrice : 'discounted-price'">
+                <p :class="isApplied ? 'costPrice' : 'discounted-price'">
                   SGD {{ formatPrice(planPrice.basic) }}
                 </p>
                 <div v-if="isApplied" class="discounted-box">
@@ -237,7 +237,7 @@
                 <p class="link-text">Full details</p>
               </v-btn>
               <div class="d-flex justify-center align-center ga-2">
-                <p :class="isApplied ? costPrice : 'discounted-price'">
+                <p :class="isApplied ? 'costPrice' : 'discounted-price'">
                   SGD {{ formatPrice(planPrice.essential) }}
                 </p>
                 <div v-if="isApplied" class="discounted-box">
@@ -283,7 +283,7 @@
                 <p class="link-text">Full details</p>
               </v-btn>
               <div class="d-flex justify-center align-center ga-2">
-                <p :class="isApplied ? costPrice : 'discounted-price'">
+                <p :class="isApplied ? 'costPrice' : 'discounted-price'">
                   SGD {{ formatPrice(planPrice.preferred) }}
                 </p>
                 <div v-if="isApplied" class="discounted-box">
@@ -531,7 +531,7 @@ const getPriceWithDollarSign = (amount?: number): string => {
     .replace(".00", "");
 };
 
-const formatPrice = (num: Number) => {
+const formatPrice = (num: number) => {
   return (Math.round(num * 100) / 100).toFixed(2);
 };
 
