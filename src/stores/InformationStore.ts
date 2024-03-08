@@ -19,7 +19,7 @@ export type InsuranceInfo = {
 };
 export type BasicInfo = {
   fullName: string;
-  dateOfBirth: string;
+  dateOfBirth?: Date;
   NRICorPassport: string;
 };
 
@@ -33,7 +33,6 @@ export type InsuredAddress = {
 
 export type InsuredInfo = BasicInfo & {
   address: InsuredAddress;
-  email: string;
   travellers: BasicInfo[];
   adults: BasicInfo[];
   children: BasicInfo[];
@@ -42,6 +41,15 @@ export type InsuredInfo = BasicInfo & {
 export type InformationState = {
   insurance: InsuranceInfo;
   insureds: InsuredInfo;
+  step: number;
+  selectedPlan: string;
+  payment: {
+    cardNumber: string;
+    cardName: string;
+    validDate: string;
+    cvvOrCvc: string;
+  };
+  isTermAgreed: boolean;
 };
 
 export enum TripType {
@@ -70,7 +78,7 @@ export const useInformationStore = defineStore("informations", {
     },
     insureds: {
       fullName: "",
-      dateOfBirth: "",
+      dateOfBirth: undefined,
       NRICorPassport: "",
       address: {
         floorOrUnitNumber: "",
@@ -79,10 +87,18 @@ export const useInformationStore = defineStore("informations", {
         street: "",
         postalCode: "",
       },
-      email: "",
       travellers: [],
       adults: [],
       children: [],
     },
+    payment: {
+      cardNumber: "",
+      cardName: "",
+      validDate: "",
+      cvvOrCvc: "",
+    },
+    step: 1,
+    selectedPlan: "essential",
+    isTermAgreed: false,
   }),
 });

@@ -11,6 +11,7 @@
     closable-chips
     hint="If you visit more than one country, select the furthest country"
     persistent-hint
+    multiple
   >
     <template v-slot:chip="{ props, item }">
       <v-chip

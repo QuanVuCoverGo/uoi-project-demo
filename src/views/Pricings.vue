@@ -1,388 +1,463 @@
 <template>
-  <Header />
-  <v-main
-    class="d-flex align-center justify-center flex-column ga-10 pricing-main"
-    style="min-height: 300px"
-  >
-    <v-container class="pa-10 w-75">
-      <v-btn
-        size="x-large"
-        prepend-icon="arrow_back"
-        variant="text"
-        color="primary"
-        class="text-none"
-        @click="$router.back()"
-        >Back</v-btn
-      >
-      <v-row>
-        <v-col cols="4"></v-col>
-        <v-col>
-          <h3 class="text-left color-blue header mb-10">Select your plan</h3>
-        </v-col>
-      </v-row>
-      <div>
-        <!-- header -->
-        <v-row class="header-row">
-          <v-col cols="4" class="pa-0 h-100"></v-col>
-          <v-col class="pa-0 h-100">
-            <v-sheet
-              :class="selectedPlan === 'basic' ? 'selectedHeader' : ''"
-              class="header-cell"
-              @click="selectedPlan = 'basic'"
-            >
-              <div class="tag"></div>
-              <p class="text-title">Basic</p>
-              <p class="text-description">
-                Basic coverage with affordable premiums
-              </p>
-            </v-sheet>
-          </v-col>
-          <v-col class="pa-0 h-100">
-            <v-sheet
-              :class="selectedPlan === 'essential' ? 'selectedHeader' : ''"
-              class="header-cell"
-              @click="selectedPlan = 'essential'"
-            >
-              <div class="tag bg-blue-darken-2">
-                <span class="polular-text">Most popular</span>
-              </div>
-              <p class="text-title">Essential</p>
-              <p class="text-description">
-                Coverage for additional peace of mind
-              </p>
-            </v-sheet>
-          </v-col>
-          <v-col class="pa-0 h-100">
-            <v-sheet
-              :class="selectedPlan === 'preferred' ? 'selectedHeader' : ''"
-              class="header-cell"
-              @click="selectedPlan = 'preferred'"
-            >
-              <div class="tag"></div>
-              <p class="text-title">Preferred</p>
-              <p class="text-description">
-                The most comprehensive coverage for maximum protection
-              </p></v-sheet
-            >
-          </v-col>
-        </v-row>
-        <!-- end of header -->
-        <!-- body -->
-        <v-row v-for="item in items" :key="item.name" class="border-row">
-          <v-col cols="4" class="pa-0 h-100">
-            <v-sheet class="benefitText name-cell pricing-main">
-              <v-row class="w-100">
-                <v-tooltip max-width="300" :text="getToolTip(item.name)">
-                  <template v-slot:activator="{ props }">
-                    <v-icon color="grey-lighten-1" v-bind="props"
-                      >error_outline</v-icon
-                    >
-                  </template>
-                </v-tooltip>
-                <div class="w-75">
-                  <p class="benefitText ml-2">{{ item.name }}</p>
-                </div>
-              </v-row>
-            </v-sheet>
-          </v-col>
-          <v-col class="pa-0 h-100">
-            <v-sheet
-              :class="selectedPlan === 'basic' ? 'selectedBody' : ''"
-              class="price-cell valueText"
-            >
+  <v-container class="pa-10 w-75">
+    <v-btn
+      size="x-large"
+      prepend-icon="arrow_back"
+      variant="text"
+      color="primary"
+      class="text-none"
+      @click="handleBack"
+      >Back</v-btn
+    >
+    <v-row>
+      <v-col cols="4"></v-col>
+      <v-col>
+        <h3 class="text-left color-blue header mb-10">Select your plan</h3>
+      </v-col>
+    </v-row>
+    <div>
+      <!-- header -->
+      <v-row class="header-row">
+        <v-col cols="4" class="pa-0 h-100"></v-col>
+        <v-col class="pa-0 h-100">
+          <v-sheet
+            :class="selectedPlan === 'basic' ? 'selectedHeader' : ''"
+            class="header-cell"
+            @click="selectedPlan = 'basic'"
+          >
+            <div class="tag"></div>
+            <p class="text-title">Basic</p>
+            <p class="text-description">
+              Basic coverage with affordable premiums
+            </p>
+            <div class="d-flex justify-center align-center ga-2">
               <p
-                v-if="typeof item.basic === 'number' && Boolean(item.basic)"
-                class="valueText ml-2"
+                :class="isApplied ? 'costPrice' : 'discounted-price'"
+                class="text-green-darken-2 font-weight-bold"
               >
-                {{ getPriceWithDollarSign(item.basic) }}
-              </p>
-              <p
-                v-else-if="
-                  typeof item.basic === 'string' && Boolean(item.basic)
-                "
-                class="valueText ml-2"
-              >
-                {{ item.basic }}
-              </p>
-
-              <div v-else class="valueText ml-2">
-                <v-icon color="grey-lighten-1" v-if="Boolean(item.basic)"
-                  >check</v-icon
-                >
-                <v-icon color="grey-lighten-1" v-else>minimize</v-icon>
-              </div>
-            </v-sheet>
-          </v-col>
-          <v-col class="pa-0 h-100">
-            <v-sheet
-              :class="selectedPlan === 'essential' ? 'selectedBody' : ''"
-              class="price-cell valueText"
-            >
-              <p
-                v-if="
-                  typeof item.essential === 'number' && Boolean(item.essential)
-                "
-                class="valueText ml-2"
-              >
-                {{ getPriceWithDollarSign(item.essential) }}
-              </p>
-              <p
-                v-else-if="
-                  typeof item.essential === 'string' && Boolean(item.essential)
-                "
-                class="valueText ml-2"
-              >
-                {{ item.essential }}
-              </p>
-
-              <div v-else class="valueText ml-2">
-                <v-icon color="grey-lighten-1" v-if="Boolean(item.essential)"
-                  >check</v-icon
-                >
-                <v-icon color="grey-lighten-1" v-else>minimize</v-icon>
-              </div>
-            </v-sheet>
-          </v-col>
-          <v-col class="pa-0 h-100">
-            <v-sheet
-              :class="selectedPlan === 'preferred' ? 'selectedBody' : ''"
-              class="price-cell valueText"
-            >
-              <p
-                v-if="
-                  typeof item.preferred === 'number' && Boolean(item.preferred)
-                "
-                class="valueText ml-2"
-              >
-                {{ getPriceWithDollarSign(item.preferred) }}
-              </p>
-              <p
-                v-else-if="
-                  typeof item.preferred === 'string' && Boolean(item.preferred)
-                "
-                class="valueText ml-2"
-              >
-                {{ item.preferred }}
-              </p>
-              <div v-else class="valueText ml-2">
-                <v-icon color="grey-lighten-1" v-if="Boolean(item.essential)"
-                  >check</v-icon
-                >
-                <v-icon color="grey-lighten-1" v-else>minimize</v-icon>
-              </div>
-            </v-sheet>
-          </v-col>
-        </v-row>
-        <!-- end of body  -->
-        <!-- footer  -->
-        <v-row class="footer-row">
-          <v-col cols="4" class="pa-0 h-100"></v-col>
-          <v-col class="pa-0 h-100">
-            <v-sheet
-              :class="selectedPlan === 'basic' ? 'selectedFooter' : ''"
-              class="footer-cell"
-            >
-              <v-btn
-                href="https://drive.google.com/file/d/15sCw15SfDA80dQsluFFWKcuySk8DZQi4/view"
-                target="_blank"
-                variant="text"
-              >
-                <v-icon color="#1976d2" size="small">description</v-icon>
-                <p class="link-text">Full details</p>
-              </v-btn>
-              <div class="d-flex justify-center align-center ga-2">
-                <p :class="isApplied ? 'costPrice' : 'discounted-price'">
-                  SGD {{ formatPrice(planPrice.basic) }}
-                </p>
-                <div v-if="isApplied" class="discounted-box">
-                  <p class="discounted-value">{{ discountValue }} %</p>
-                </div>
-              </div>
-              <p v-if="discountPlanPrice.basic" class="discounted-price">
-                SGD {{ formatPrice(discountPlanPrice.basic) }}
-              </p>
-              <v-btn
-                class="w-100 mt-2"
-                variant="outlined"
-                :class="
-                  selectedPlan === 'basic'
-                    ? 'text-white bg-blue-darken-2'
-                    : 'text-blue-darken-2'
-                "
-                @click="selectedPlan = 'basic'"
-              >
-                <v-icon
-                  v-if="selectedPlan === 'basic'"
-                  color="white"
-                  size="small"
-                  >check_circle_outline</v-icon
-                >
-                <p class="select-button">
-                  {{ selectedPlan === "basic" ? "Selected" : "Select" }}
-                </p>
-              </v-btn>
-            </v-sheet>
-          </v-col>
-          <v-col class="pa-0 h-100">
-            <v-sheet
-              :class="selectedPlan === 'essential' ? 'selectedFooter' : ''"
-              class="footer-cell"
-            >
-              <v-btn
-                variant="text"
-                href="https://drive.google.com/file/d/15sCw15SfDA80dQsluFFWKcuySk8DZQi4/view"
-                target="_blank"
-              >
-                <v-icon color="#1976d2" size="small">description</v-icon>
-                <p class="link-text">Full details</p>
-              </v-btn>
-              <div class="d-flex justify-center align-center ga-2">
-                <p :class="isApplied ? 'costPrice' : 'discounted-price'">
-                  SGD {{ formatPrice(planPrice.essential) }}
-                </p>
-                <div v-if="isApplied" class="discounted-box">
-                  <p class="discounted-value">{{ discountValue }} %</p>
-                </div>
-              </div>
-              <p v-if="discountPlanPrice.essential" class="discounted-price">
                 SGD {{ formatPrice(discountPlanPrice.essential) }}
               </p>
-              <v-btn
-                class="w-100 mt-2"
-                variant="outlined"
+              <p
                 :class="
-                  selectedPlan === 'essential'
-                    ? 'text-white bg-blue-darken-2'
-                    : 'text-blue-darken-2'
+                  isApplied
+                    ? 'costPrice text-decoration-line-through'
+                    : 'discounted-price'
                 "
-                @click="selectedPlan = 'essential'"
               >
-                <v-icon
-                  v-if="selectedPlan === 'essential'"
-                  color="white"
-                  size="small"
-                  >check_circle_outline</v-icon
-                >
-                <p class="select-button">
-                  {{ selectedPlan === "essential" ? "Selected" : "Select" }}
-                </p>
-              </v-btn>
-            </v-sheet>
-          </v-col>
-          <v-col class="pa-0 h-100">
-            <v-sheet
-              :class="selectedPlan === 'preferred' ? 'selectedFooter' : ''"
-              class="footer-cell"
-            >
-              <v-btn
-                variant="text"
-                href="https://drive.google.com/file/d/15sCw15SfDA80dQsluFFWKcuySk8DZQi4/view"
-                target="_blank"
+                SGD {{ formatPrice(planPrice.basic) }}
+              </p>
+            </div>
+          </v-sheet>
+        </v-col>
+        <v-col class="pa-0 h-100">
+          <v-sheet
+            :class="selectedPlan === 'essential' ? 'selectedHeader' : ''"
+            class="header-cell"
+            @click="selectedPlan = 'essential'"
+          >
+            <div class="tag bg-blue-darken-2">
+              <span class="polular-text">Most popular</span>
+            </div>
+            <p class="text-title">Essential</p>
+            <p class="text-description">
+              Coverage for additional peace of mind
+            </p>
+            <div class="d-flex justify-center align-center ga-2">
+              <p
+                :class="isApplied ? 'costPrice' : 'discounted-price'"
+                class="text-green-darken-2 font-weight-bold"
               >
-                <v-icon color="#1976d2" size="small">check_circle</v-icon>
-                <p class="link-text">Full details</p>
-              </v-btn>
-              <div class="d-flex justify-center align-center ga-2">
-                <p :class="isApplied ? 'costPrice' : 'discounted-price'">
-                  SGD {{ formatPrice(planPrice.preferred) }}
-                </p>
-                <div v-if="isApplied" class="discounted-box">
-                  <p class="discounted-value">{{ discountValue }} %</p>
-                </div>
-              </div>
-
-              <p v-if="discountPlanPrice.preferred" class="discounted-price">
+                SGD {{ formatPrice(discountPlanPrice.essential) }}
+              </p>
+              <p
+                :class="
+                  isApplied
+                    ? 'costPrice text-decoration-line-through'
+                    : 'discounted-price'
+                "
+              >
+                SGD {{ formatPrice(planPrice.essential) }}
+              </p>
+            </div>
+          </v-sheet>
+        </v-col>
+        <v-col class="pa-0 h-100">
+          <v-sheet
+            :class="selectedPlan === 'preferred' ? 'selectedHeader' : ''"
+            class="header-cell"
+            @click="selectedPlan = 'preferred'"
+          >
+            <div class="tag"></div>
+            <p class="text-title">Preferred</p>
+            <p class="text-description">
+              The most comprehensive coverage for maximum protection
+            </p>
+            <div class="d-flex justify-center align-center ga-2">
+              <p
+                :class="isApplied ? 'costPrice' : 'discounted-price'"
+                class="text-green-darken-2 font-weight-bold"
+              >
                 SGD {{ formatPrice(discountPlanPrice.preferred) }}
               </p>
-
-              <v-btn
-                class="w-100 mt-2"
-                variant="outlined"
+              <p
                 :class="
-                  selectedPlan === 'preferred'
-                    ? 'text-white bg-blue-darken-2'
-                    : 'text-blue-darken-2'
+                  isApplied
+                    ? 'costPrice text-decoration-line-through'
+                    : 'discounted-price'
                 "
-                @click="selectedPlan = 'preferred'"
               >
-                <v-icon
-                  v-if="selectedPlan === 'preferred'"
-                  color="white"
-                  size="small"
-                  >check_circle_outline</v-icon
-                >
-                <p class="select-button">
-                  {{ selectedPlan === "preferred" ? "Selected" : "Select" }}
-                </p>
-              </v-btn>
-            </v-sheet>
-          </v-col>
-        </v-row>
-        <!-- end of footer  -->
-      </div>
-      <!-- promo code box  -->
-      <div class="mt-16 d-flex justify-center">
-        <div class="d-flex flex-column ga-4 w-50">
-          <div v-if="isApplied" class="discount-tag bg-green-lighten-4">
-            <v-icon color="#4CAF50" size="small"> check_circle_outline </v-icon>
-            <span class="discount-text ml-2"
-              >Most We applied ABCDEF for
-              <span class="font-weight-bold"
-                >{{ discountValue }}% off</span
-              ></span
+                SGD {{ formatPrice(planPrice.preferred) }}
+              </p>
+            </div>
+          </v-sheet>
+        </v-col>
+      </v-row>
+      <!-- end of header -->
+      <!-- body -->
+      <v-row v-for="item in items" :key="item.name" class="border-row">
+        <v-col cols="4" class="pa-0 h-100">
+          <v-sheet class="benefitText name-cell pricing-main">
+            <v-row class="w-100">
+              <v-tooltip max-width="300" :text="getToolTip(item.name)">
+                <template v-slot:activator="{ props }">
+                  <v-icon color="grey-lighten-1" v-bind="props"
+                    >error_outline</v-icon
+                  >
+                </template>
+              </v-tooltip>
+              <div class="w-75">
+                <p class="benefitText ml-2">{{ item.name }}</p>
+              </div>
+            </v-row>
+          </v-sheet>
+        </v-col>
+        <v-col class="pa-0 h-100">
+          <v-sheet
+            :class="selectedPlan === 'basic' ? 'selectedBody' : ''"
+            class="price-cell valueText"
+          >
+            <p
+              v-if="typeof item.basic === 'number' && Boolean(item.basic)"
+              class="valueText ml-2"
             >
-          </div>
-          <v-text-field
-            v-model="promodeCode"
-            variant="outlined"
-            label="Enter promo code"
-          >
-            <template v-slot:append-inner>
-              <v-btn
-                :disabled="!promodeCode"
-                @click="handleRedeem"
-                class="text-none"
-                variant="outlined"
-                color="primary"
+              {{ getPriceWithDollarSign(item.basic) }}
+            </p>
+            <p
+              v-else-if="typeof item.basic === 'string' && Boolean(item.basic)"
+              class="valueText ml-2"
+            >
+              {{ item.basic }}
+            </p>
+
+            <div v-else class="valueText ml-2">
+              <v-icon color="grey-lighten-1" v-if="Boolean(item.basic)"
+                >check</v-icon
               >
-                Redeem
-              </v-btn>
-            </template>
-          </v-text-field>
-        </div>
-      </div>
-      <!-- end of promo code box  -->
-      <div class="mt-16 d-flex justify-center">
-        <div class="d-flex flex-row justify-center ga-4 w-50">
-          <v-btn
-            size="x-large"
-            prepend-icon="arrow_back"
-            variant="outlined"
-            color="primary"
-            class="text-none"
-            @click="$router.back()"
-            >Back</v-btn
+              <v-icon color="grey-lighten-1" v-else>minimize</v-icon>
+            </div>
+          </v-sheet>
+        </v-col>
+        <v-col class="pa-0 h-100">
+          <v-sheet
+            :class="selectedPlan === 'essential' ? 'selectedBody' : ''"
+            class="price-cell valueText"
           >
-          <v-btn
-            class="text-none"
-            size="x-large"
-            prepend-icon="arrow_forward"
-            color="primary"
-            @click="$router.push({ name: 'ApplicantInformation' })"
-            >Continue</v-btn
+            <p
+              v-if="
+                typeof item.essential === 'number' && Boolean(item.essential)
+              "
+              class="valueText ml-2"
+            >
+              {{ getPriceWithDollarSign(item.essential) }}
+            </p>
+            <p
+              v-else-if="
+                typeof item.essential === 'string' && Boolean(item.essential)
+              "
+              class="valueText ml-2"
+            >
+              {{ item.essential }}
+            </p>
+
+            <div v-else class="valueText ml-2">
+              <v-icon color="grey-lighten-1" v-if="Boolean(item.essential)"
+                >check</v-icon
+              >
+              <v-icon color="grey-lighten-1" v-else>minimize</v-icon>
+            </div>
+          </v-sheet>
+        </v-col>
+        <v-col class="pa-0 h-100">
+          <v-sheet
+            :class="selectedPlan === 'preferred' ? 'selectedBody' : ''"
+            class="price-cell valueText"
+          >
+            <p
+              v-if="
+                typeof item.preferred === 'number' && Boolean(item.preferred)
+              "
+              class="valueText ml-2"
+            >
+              {{ getPriceWithDollarSign(item.preferred) }}
+            </p>
+            <p
+              v-else-if="
+                typeof item.preferred === 'string' && Boolean(item.preferred)
+              "
+              class="valueText ml-2"
+            >
+              {{ item.preferred }}
+            </p>
+            <div v-else class="valueText ml-2">
+              <v-icon color="grey-lighten-1" v-if="Boolean(item.essential)"
+                >check</v-icon
+              >
+              <v-icon color="grey-lighten-1" v-else>minimize</v-icon>
+            </div>
+          </v-sheet>
+        </v-col>
+      </v-row>
+      <!-- end of body  -->
+      <!-- footer  -->
+      <v-row class="footer-row">
+        <v-col cols="4" class="pa-0 h-100"></v-col>
+        <v-col class="pa-0 h-100">
+          <v-sheet
+            :class="selectedPlan === 'basic' ? 'selectedFooter' : ''"
+            class="footer-cell"
+          >
+            <v-btn
+              href="https://drive.google.com/file/d/15sCw15SfDA80dQsluFFWKcuySk8DZQi4/view"
+              target="_blank"
+              variant="text"
+            >
+              <v-icon color="#1976d2" size="small">description</v-icon>
+              <p class="link-text">Full details</p>
+            </v-btn>
+            <div class="d-flex justify-center align-center ga-2">
+              <p
+                :class="
+                  isApplied
+                    ? 'costPrice text-decoration-line-through'
+                    : 'discounted-price'
+                "
+              >
+                SGD {{ formatPrice(planPrice.basic) }}
+              </p>
+              <div v-if="isApplied" class="discounted-box">
+                <p class="discounted-value">{{ discountValue }} %</p>
+              </div>
+            </div>
+            <p v-if="discountPlanPrice.basic" class="discounted-price">
+              SGD {{ formatPrice(discountPlanPrice.basic) }}
+            </p>
+            <v-btn
+              class="w-100 mt-2"
+              variant="outlined"
+              :class="
+                selectedPlan === 'basic'
+                  ? 'text-white bg-blue-darken-2'
+                  : 'text-blue-darken-2'
+              "
+              @click="selectedPlan = 'basic'"
+            >
+              <v-icon v-if="selectedPlan === 'basic'" color="white" size="small"
+                >check_circle_outline</v-icon
+              >
+              <p class="select-button">
+                {{ selectedPlan === "basic" ? "Selected" : "Select" }}
+              </p>
+            </v-btn>
+          </v-sheet>
+        </v-col>
+        <v-col class="pa-0 h-100">
+          <v-sheet
+            :class="selectedPlan === 'essential' ? 'selectedFooter' : ''"
+            class="footer-cell"
+          >
+            <v-btn
+              variant="text"
+              href="https://drive.google.com/file/d/15sCw15SfDA80dQsluFFWKcuySk8DZQi4/view"
+              target="_blank"
+            >
+              <v-icon color="#1976d2" size="small">description</v-icon>
+              <p class="link-text">Full details</p>
+            </v-btn>
+            <div class="d-flex justify-center align-center ga-2">
+              <p
+                :class="
+                  isApplied
+                    ? 'costPrice text-decoration-line-through'
+                    : 'discounted-price'
+                "
+              >
+                SGD {{ formatPrice(planPrice.essential) }}
+              </p>
+              <div v-if="isApplied" class="discounted-box">
+                <p class="discounted-value">{{ discountValue }} %</p>
+              </div>
+            </div>
+            <p v-if="discountPlanPrice.essential" class="discounted-price">
+              SGD {{ formatPrice(discountPlanPrice.essential) }}
+            </p>
+            <v-btn
+              class="w-100 mt-2"
+              variant="outlined"
+              :class="
+                selectedPlan === 'essential'
+                  ? 'text-white bg-blue-darken-2'
+                  : 'text-blue-darken-2'
+              "
+              @click="selectedPlan = 'essential'"
+            >
+              <v-icon
+                v-if="selectedPlan === 'essential'"
+                color="white"
+                size="small"
+                >check_circle_outline</v-icon
+              >
+              <p class="select-button">
+                {{ selectedPlan === "essential" ? "Selected" : "Select" }}
+              </p>
+            </v-btn>
+          </v-sheet>
+        </v-col>
+        <v-col class="pa-0 h-100">
+          <v-sheet
+            :class="selectedPlan === 'preferred' ? 'selectedFooter' : ''"
+            class="footer-cell"
+          >
+            <v-btn
+              variant="text"
+              href="https://drive.google.com/file/d/15sCw15SfDA80dQsluFFWKcuySk8DZQi4/view"
+              target="_blank"
+            >
+              <v-icon color="#1976d2" size="small">check_circle</v-icon>
+              <p class="link-text">Full details</p>
+            </v-btn>
+            <div class="d-flex justify-center align-center ga-2">
+              <p
+                :class="
+                  isApplied
+                    ? 'costPrice text-decoration-line-through'
+                    : 'discounted-price'
+                "
+              >
+                SGD {{ formatPrice(planPrice.preferred) }}
+              </p>
+              <div v-if="isApplied" class="discounted-box">
+                <p class="discounted-value">{{ discountValue }} %</p>
+              </div>
+            </div>
+
+            <p v-if="discountPlanPrice.preferred" class="discounted-price">
+              SGD {{ formatPrice(discountPlanPrice.preferred) }}
+            </p>
+
+            <v-btn
+              class="w-100 mt-2"
+              variant="outlined"
+              :class="
+                selectedPlan === 'preferred'
+                  ? 'text-white bg-blue-darken-2'
+                  : 'text-blue-darken-2'
+              "
+              @click="selectedPlan = 'preferred'"
+            >
+              <v-icon
+                v-if="selectedPlan === 'preferred'"
+                color="white"
+                size="small"
+                >check_circle_outline</v-icon
+              >
+              <p class="select-button">
+                {{ selectedPlan === "preferred" ? "Selected" : "Select" }}
+              </p>
+            </v-btn>
+          </v-sheet>
+        </v-col>
+      </v-row>
+      <!-- end of footer  -->
+    </div>
+    <!-- promo code box  -->
+    <div class="mt-16 d-flex justify-center">
+      <div class="d-flex flex-column ga-4 w-50">
+        <div v-if="isApplied" class="discount-tag bg-green-lighten-4">
+          <v-icon color="#4CAF50" size="small"> check_circle_outline </v-icon>
+          <span class="discount-text ml-2"
+            >Most We applied ABCDEF for
+            <span class="font-weight-bold">{{ discountValue }}% off</span></span
           >
         </div>
+        <v-text-field
+          v-model="promodeCode"
+          variant="outlined"
+          label="Enter promo code"
+        >
+          <template v-slot:prepend-inner>
+            <div class="code-box">
+              {{ defaultCode }}
+            </div>
+          </template>
+          <template v-slot:append-inner>
+            <v-btn
+              :disabled="!promodeCode"
+              @click="handleRedeem"
+              class="text-none"
+              variant="outlined"
+              color="primary"
+            >
+              Redeem
+            </v-btn>
+          </template>
+        </v-text-field>
       </div>
-    </v-container>
-  </v-main>
+    </div>
+    <!-- end of promo code box  -->
+    <div class="mt-16 d-flex justify-center">
+      <div class="d-flex flex-row justify-center ga-4 w-50">
+        <v-btn
+          size="x-large"
+          prepend-icon="arrow_back"
+          variant="outlined"
+          color="primary"
+          class="text-none"
+          @click="handleBack"
+          >Back</v-btn
+        >
+        <v-btn
+          class="text-none"
+          size="x-large"
+          prepend-icon="arrow_forward"
+          color="primary"
+          @click="handleNext"
+          >Continue</v-btn
+        >
+      </div>
+    </div>
+  </v-container>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, reactive } from "vue";
+import { ref, computed, reactive, onMounted } from "vue";
 import Header from "../components/Header.vue";
 import { useInformationStore } from "../stores/InformationStore";
 
+const defaultCode = "DHK233DH";
+
 const insuranceStore = useInformationStore();
+
+const handleBack = () => {
+  insuranceStore.step = 1;
+};
+const handleNext = () => {
+  insuranceStore.selectedPlan = selectedPlan.value;
+  insuranceStore.step = 3;
+};
+const defaultDiscount = computed(() => {
+  const isSingle = insuranceStore.insurance?.typeOfInsuranceTrip === "single";
+  return isSingle ? 40 : 25;
+});
 
 const promodeCode = ref();
 
@@ -487,9 +562,10 @@ const items = [
 ];
 
 const discountValue = computed(() => {
-  if (!promodeCode.value) return 0;
-  const isSingle = insuranceStore.insurance?.typeOfInsuranceTrip === "single";
-  return isSingle ? 40 : 25;
+  if (!promodeCode.value) {
+    return defaultDiscount.value;
+  }
+  return 0; // TODO
 });
 
 const planPrice = {
@@ -505,15 +581,15 @@ const discountPlanPrice = reactive({
 });
 
 const handleRedeem = () => {
-  if (!discountValue.value) return;
+  if (!defaultDiscount.value) return;
   // TODO: check code
   isApplied.value = true;
   discountPlanPrice.basic =
-    planPrice.basic - (planPrice.basic * discountValue.value) / 100;
+    planPrice.basic - (planPrice.basic * defaultDiscount.value) / 100;
   discountPlanPrice.essential =
-    planPrice.essential - (planPrice.essential * discountValue.value) / 100;
+    planPrice.essential - (planPrice.essential * defaultDiscount.value) / 100;
   discountPlanPrice.preferred =
-    planPrice.preferred - (planPrice.preferred * discountValue.value) / 100;
+    planPrice.preferred - (planPrice.preferred * defaultDiscount.value) / 100;
 };
 
 const selectedPlan = ref("essential");
@@ -535,6 +611,11 @@ const getPriceWithDollarSign = (amount?: number): string => {
 const formatPrice = (num: number) => {
   return (Math.round(num * 100) / 100).toFixed(2);
 };
+
+onMounted(() => {
+  selectedPlan.value = insuranceStore.selectedPlan;
+  handleRedeem();
+});
 
 // import BuilderContent from "../components/BuilderContent.vue";
 </script>
@@ -810,6 +891,18 @@ const formatPrice = (num: number) => {
   letter-spacing: 0px;
   text-align: left;
   color: #377e22;
+}
+
+.code-box {
+  height: 40px;
+  border: 1px solid #1976d2;
+  padding: 10px 20px;
+  border-radius: 20px;
+  color: #1976d2;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
 

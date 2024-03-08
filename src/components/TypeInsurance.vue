@@ -20,8 +20,11 @@
           >
             check_circle
           </v-icon>
-          <div v-if="isSelected" class="absolute-left">
-            <v-tooltip text="Child is also a student up to 23 years old">
+          <div class="absolute-left">
+            <v-tooltip
+              max-width="300"
+              text="For you and/or your travel companion(s) travelling together for the entire trip."
+            >
               <template v-slot:activator="{ props }">
                 <v-icon color="grey-lighten-1" v-bind="props"
                   >error_outline</v-icon
@@ -53,6 +56,18 @@
           >
             check_circle
           </v-icon>
+          <div class="absolute-left">
+            <v-tooltip
+              max-width="300"
+              text="For you and/or your legal spouse and child(ren) travelling together for the entire trip."
+            >
+              <template v-slot:activator="{ props }">
+                <v-icon color="grey-lighten-1" v-bind="props"
+                  >error_outline</v-icon
+                >
+              </template>
+            </v-tooltip>
+          </div>
           <div
             class="d-flex flex-column align-center justify-center ga-2 w-100"
           >

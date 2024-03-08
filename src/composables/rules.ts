@@ -20,3 +20,24 @@ export const getRequiredRules = (fieldName: string) => {
     },
   ];
 };
+
+export const cardNumberRules = [
+  (value: any) => {
+    if (value) return true;
+
+    return "Card number is required.";
+  },
+];
+
+export const validThruRules = [
+  (value: any) => {
+    if (value) return true;
+
+    return "Valid thru  is required.";
+  },
+  (value: any) => {
+    if (/^(0[1-9]|1[0-2])\/([2-9][0-9]{3})$/.test(value)) return true;
+
+    return "Valid thru must be valid.";
+  },
+];

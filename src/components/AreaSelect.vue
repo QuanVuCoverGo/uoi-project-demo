@@ -33,20 +33,6 @@ const props = defineProps({
 
 const areas = [
   {
-    name: "Area 1",
-    description:
-      "Brunei, Cambodia, Indonesia, Laos, Malaysia, Myanmar, Philippines, Thailand and Vietnam",
-  },
-  {
-    name: "Area 2",
-    description:
-      "Asia countries excluding Middle East countries, Central Asia countries and Russian Federation. ",
-  },
-  {
-    name: "Area 3",
-    description: "Anywhere in the world",
-  },
-  {
     name: "Area 4",
     description:
       "ASEAN, Asia countries excluding Middle East countries, Central Asia countries and Russian Federation.",

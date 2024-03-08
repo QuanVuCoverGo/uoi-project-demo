@@ -9,6 +9,7 @@
         variant="outlined"
         :disabled="disabled"
         :rules="rules"
+        class="w-100"
       ></v-text-field>
     </template>
     <v-date-picker
