@@ -32,9 +32,18 @@ import Pricings from "./Pricings.vue";
 import TripInformation from "./TripInformation.vue";
 import SummaryInfo from "./SummaryInfo.vue";
 import Payment from "./Payment.vue";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 
 const store = useInformationStore();
+
+watch(
+  () => store.step,
+  (v) => {
+    if (v) {
+      window.scrollTo(0, 0);
+    }
+  }
+);
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

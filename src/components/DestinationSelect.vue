@@ -1,7 +1,7 @@
 <template>
   <v-autocomplete
-    v-model="destination"
-    :items="destinations"
+    v-model="destinations"
+    :items="COUNTRIES_WITH_FLAG"
     color="blue-grey-lighten-2"
     item-title="name"
     item-value="name"
@@ -33,6 +33,7 @@
 </template>
 <script setup>
 import { useVModel } from "@/composables/useVModel";
+import { COUNTRIES_WITH_FLAG } from "@/constants";
 import { defineProps, defineEmits } from "vue";
 
 const props = defineProps({
@@ -41,41 +42,8 @@ const props = defineProps({
   showLabel: { type: Boolean, default: false },
 });
 
-const destinations = [
-  {
-    name: "France",
-    imageSrc:
-      "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/1200px-Flag_of_France.svg.png",
-  },
-  {
-    name: "Japan",
-    imageSrc:
-      "https://upload.wikimedia.org/wikipedia/en/9/9e/Flag_of_Japan.svg",
-  },
-  {
-    name: "Brazil",
-    imageSrc:
-      "https://upload.wikimedia.org/wikipedia/en/thumb/0/05/Flag_of_Brazil.svg/640px-Flag_of_Brazil.svg.png",
-  },
-  {
-    name: "Canada",
-    imageSrc:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Canada_%28Pantone%29.svg/255px-Flag_of_Canada_%28Pantone%29.svg.png",
-  },
-  {
-    name: "Australia",
-    imageSrc:
-      "https://upload.wikimedia.org/wikipedia/commons/8/88/Flag_of_Australia_%28converted%29.svg",
-  },
-  {
-    name: "Vietnam",
-    imageSrc:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/1200px-Flag_of_Vietnam.svg.png",
-  },
-];
-
 const emits = defineEmits(["update:modelValue"]);
 
-const destination = useVModel(props, "modelValue", emits);
+const destinations = useVModel(props, "modelValue", emits);
 </script>
 <style></style>

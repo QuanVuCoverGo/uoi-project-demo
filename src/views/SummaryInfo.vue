@@ -18,6 +18,7 @@
         <div class="d-flex flex-column display-card">
           <v-btn
             variant="text"
+            @click="store.step = 3"
             class="absolute-left-btn text-none text-blue-darken-3"
             ><v-icon color="blue-darken-3 mr-2">edit</v-icon> Edit</v-btn
           >
@@ -29,8 +30,12 @@
               class="d-flex flex-column justify-center align-left ga-2"
             >
               <p class="display-label">Destination</p>
-              <p class="display-bold-value">
-                {{ basicInformation.destination }}
+              <p
+                v-for="destination in basicInformation.destinations"
+                :key="destination"
+                class="display-bold-value mb-2"
+              >
+                {{ destination }}
               </p>
             </div>
             <div
@@ -39,7 +44,10 @@
             >
               <p class="display-label">Area</p>
               <p class="display-bold-value">
-                {{ basicInformation.destination }}
+                {{ basicInformation.area }}
+              </p>
+              <p class="display-bold-value">
+                {{ getAreaDescription(basicInformation.area) }}
               </p>
             </div>
             <div class="d-flex flex-column justify-center align-left ga-2">
@@ -62,6 +70,7 @@
         </div>
         <InsuredDisplay
           v-if="store.insureds"
+          @onEdit="store.step = 3"
           :insuredInfo="{ ...store.insureds, email: store.insurance.email }"
           :index="1"
           :type="'applicant'"
@@ -70,6 +79,7 @@
           <div v-for="n in store.insurance.traveller - 1" :key="n">
             <InsuredDisplay
               v-if="store.insureds.travellers[n - 1]"
+              @onEdit="store.step = 3"
               :insuredInfo="store.insureds.travellers[n - 1]"
               :index="n + 1"
             ></InsuredDisplay>
@@ -79,6 +89,7 @@
           <div v-for="n in store.insurance.adults - 1" :key="n">
             <InsuredDisplay
               v-if="store.insureds.adults[n - 1]"
+              @onEdit="store.step = 3"
               :type="'Adult'"
               :insuredInfo="store.insureds.adults[n - 1]"
               :index="n + 1"
@@ -87,6 +98,7 @@
           <div v-for="n in store.insurance.children" :key="n">
             <InsuredDisplay
               v-if="store.insureds.children[n - 1]"
+              @onEdit="store.step = 3"
               :type="'Child'"
               :insuredInfo="store.insureds.children[n - 1]"
               :index="n + store.insureds.adults.length + 1"
@@ -97,7 +109,9 @@
       <div class="mt-4 d-flex justify-center">
         <div class="d-flex flex-row justify-center align-center ga-4 w-50">
           <p class="total-price">Total premium:</p>
-          <p class="total-value">SGD 58</p>
+          <p class="total-value">
+            SGD {{ formatPrice(store.selectedPlanPrice) }}
+          </p>
         </div>
       </div>
       <div class="mt-4 d-flex justify-center">
@@ -183,6 +197,7 @@ import { computed, ref, reactive, onBeforeMount } from "vue";
 import moment from "moment";
 import InsuredDisplay from "@/components/InsuredDisplay.vue";
 import { getRequiredRules } from "@/composables/rules";
+import { getAreaDescription } from "@/utils/common";
 
 const store = useInformationStore();
 
@@ -202,6 +217,10 @@ const handleNext = () => {
 
 const formatDate = (date: string) => {
   return moment(date).format("DD MMMM YYYY");
+};
+
+const formatPrice = (num: number) => {
+  return (Math.round(num * 100) / 100).toFixed(2);
 };
 </script>
 <style>

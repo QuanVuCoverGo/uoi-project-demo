@@ -1,10 +1,10 @@
 <template>
   <v-autocomplete
     v-model="area"
-    :items="areas"
+    :items="AREAS_LIST"
     color="blue-grey-lighten-2"
     item-title="name"
-    item-value="name"
+    item-value="value"
     variant="outlined"
     outline
     chips
@@ -24,24 +24,13 @@
 <script setup>
 import { useVModel } from "@/composables/useVModel";
 import { defineProps, defineEmits } from "vue";
+import { AREAS_LIST } from "@/constants";
 
 const props = defineProps({
   label: { type: String, default: "Select" },
   modelValue: { type: String },
   showLabel: { type: Boolean, default: false },
 });
-
-const areas = [
-  {
-    name: "Area 4",
-    description:
-      "ASEAN, Asia countries excluding Middle East countries, Central Asia countries and Russian Federation.",
-  },
-  {
-    name: "Area 5",
-    description: "Anywhere in the world",
-  },
-];
 
 const emits = defineEmits(["update:modelValue"]);
 

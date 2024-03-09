@@ -41,3 +41,17 @@ export const validThruRules = [
     return "Valid thru must be valid.";
   },
 ];
+
+export const fullNameRules = [
+  (value: any) => {
+    if (value) return true;
+
+    return "Full name  is required.";
+  },
+  (value: any) => {
+    if (/^[a-zA-Z]+(?: [a-zA-Z]+)* [a-zA-Z]+(?: [a-zA-Z]+)*$/.test(value))
+      return true;
+
+    return "Full name must have at lest two word";
+  },
+];

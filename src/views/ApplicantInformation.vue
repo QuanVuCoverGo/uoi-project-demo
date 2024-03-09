@@ -34,7 +34,7 @@
                 label="Full name"
                 class="w-100 mb-3"
                 hint="As per NRIC/passport"
-                :rules="getRequiredRules('Full name')"
+                :rules="fullNameRules"
                 persistent-hint
                 v-model="store.insureds.fullName"
               >
@@ -167,7 +167,7 @@
 import { useInformationStore } from "../stores/InformationStore";
 import { computed, ref, reactive, onBeforeMount } from "vue";
 import { v4 as uuid } from "uuid";
-import { getRequiredRules } from "@/composables/rules";
+import { getRequiredRules, fullNameRules } from "@/composables/rules";
 
 const store = useInformationStore();
 

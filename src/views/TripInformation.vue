@@ -107,7 +107,7 @@
         >
           <DestinationSelect
             :rules="getRequiredRules('Destination')"
-            v-model="store.insurance.destination"
+            v-model="store.insurance.destinations"
           />
         </VGroupItems>
         <VGroupItems v-else label="Select area">
@@ -159,7 +159,7 @@
             >
               You will be insured for
               <span class="font-weight-bold"
-                >{{ Math.floor(numberOfDays) }} days</span
+                >{{ Math.ceil(numberOfDays) }} days</span
               >
             </p>
             <p v-else class="insuredDays ml-2">

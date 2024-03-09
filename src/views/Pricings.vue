@@ -19,7 +19,7 @@
       <!-- header -->
       <v-row class="header-row">
         <v-col cols="4" class="pa-0 h-100"></v-col>
-        <v-col class="pa-0 h-100">
+        <v-col class="pa-0 h-100" v-if="planPrice?.basic">
           <v-sheet
             :class="selectedPlan === 'basic' ? 'selectedHeader' : ''"
             class="header-cell"
@@ -49,7 +49,7 @@
             </div>
           </v-sheet>
         </v-col>
-        <v-col class="pa-0 h-100">
+        <v-col class="pa-0 h-100" v-if="planPrice?.essential">
           <v-sheet
             :class="selectedPlan === 'essential' ? 'selectedHeader' : ''"
             class="header-cell"
@@ -81,7 +81,7 @@
             </div>
           </v-sheet>
         </v-col>
-        <v-col class="pa-0 h-100">
+        <v-col class="pa-0 h-100" v-if="planPrice?.preferred">
           <v-sheet
             :class="selectedPlan === 'preferred' ? 'selectedHeader' : ''"
             class="header-cell"
@@ -114,7 +114,11 @@
       </v-row>
       <!-- end of header -->
       <!-- body -->
-      <v-row v-for="item in items" :key="item.name" class="border-row">
+      <v-row
+        v-for="item in PRICINGS_DETAILS"
+        :key="item.name"
+        class="border-row"
+      >
         <v-col cols="4" class="pa-0 h-100">
           <v-sheet class="benefitText name-cell pricing-main">
             <v-row class="w-100">
@@ -131,7 +135,7 @@
             </v-row>
           </v-sheet>
         </v-col>
-        <v-col class="pa-0 h-100">
+        <v-col class="pa-0 h-100" v-if="planPrice?.basic">
           <v-sheet
             :class="selectedPlan === 'basic' ? 'selectedBody' : ''"
             class="price-cell valueText"
@@ -157,7 +161,7 @@
             </div>
           </v-sheet>
         </v-col>
-        <v-col class="pa-0 h-100">
+        <v-col class="pa-0 h-100" v-if="planPrice?.essential">
           <v-sheet
             :class="selectedPlan === 'essential' ? 'selectedBody' : ''"
             class="price-cell valueText"
@@ -187,7 +191,7 @@
             </div>
           </v-sheet>
         </v-col>
-        <v-col class="pa-0 h-100">
+        <v-col class="pa-0 h-100" v-if="planPrice?.preferred">
           <v-sheet
             :class="selectedPlan === 'preferred' ? 'selectedBody' : ''"
             class="price-cell valueText"
@@ -221,7 +225,7 @@
       <!-- footer  -->
       <v-row class="footer-row">
         <v-col cols="4" class="pa-0 h-100"></v-col>
-        <v-col class="pa-0 h-100">
+        <v-col class="pa-0 h-100" v-if="planPrice?.basic">
           <v-sheet
             :class="selectedPlan === 'basic' ? 'selectedFooter' : ''"
             class="footer-cell"
@@ -270,7 +274,7 @@
             </v-btn>
           </v-sheet>
         </v-col>
-        <v-col class="pa-0 h-100">
+        <v-col class="pa-0 h-100" v-if="planPrice?.essential">
           <v-sheet
             :class="selectedPlan === 'essential' ? 'selectedFooter' : ''"
             class="footer-cell"
@@ -322,7 +326,7 @@
             </v-btn>
           </v-sheet>
         </v-col>
-        <v-col class="pa-0 h-100">
+        <v-col class="pa-0 h-100" v-if="planPrice?.preferred">
           <v-sheet
             :class="selectedPlan === 'preferred' ? 'selectedFooter' : ''"
             class="footer-cell"
@@ -385,7 +389,7 @@
         <div v-if="isApplied" class="discount-tag bg-green-lighten-4">
           <v-icon color="#4CAF50" size="small"> check_circle_outline </v-icon>
           <span class="discount-text ml-2"
-            >Most We applied ABCDEF for
+            >Most We applied {{ defaultCode }} for
             <span class="font-weight-bold">{{ discountValue }}% off</span></span
           >
         </div>
@@ -442,6 +446,7 @@
 import { ref, computed, reactive, onMounted } from "vue";
 import Header from "../components/Header.vue";
 import { useInformationStore } from "../stores/InformationStore";
+import { PRICINGS_DETAILS } from "@/constants";
 
 const defaultCode = "DHK233DH";
 
@@ -452,6 +457,7 @@ const handleBack = () => {
 };
 const handleNext = () => {
   insuranceStore.selectedPlan = selectedPlan.value;
+  insuranceStore.selectedPlanPrice = discountPlanPrice[selectedPlan.value];
   insuranceStore.step = 3;
 };
 const defaultDiscount = computed(() => {
@@ -463,104 +469,6 @@ const promodeCode = ref();
 
 const isApplied = ref(false);
 
-const items = [
-  {
-    name: "Personal Accidental Cover (Adult <70)",
-    basic: 150000,
-    essential: 25000,
-    preferred: 350000,
-    tooltip:
-      "Provides compensation in the event of injuries, disability, or death caused solely by violent, accidental, external, and visible events during the trip.",
-  },
-  {
-    name: "Medical Expenses Overseas (Adult <70)",
-    basic: 200000,
-    essential: 500000,
-    preferred: 750000,
-    tooltip:
-      "Reimburses you for the cost of medical treatment received while you are traveling outside your home country. This coverage can include expenses for doctor visits, hospital stays, surgeries, prescriptions",
-  },
-  {
-    name: "Hospital Day Stay (Overseas)",
-    basic: "$100/day up to $15,000",
-    essential: "$200/day up to $30,000",
-    preferred: "$300/day up to $45,000",
-    tooltip:
-      "Coverage for each day you are required to stay in a hospital during your trip abroad. Offers a fixed daily allowance to help cover the cost of incidental expenses that may not be directly related to medical treatment but arise as a result of hospitalization. Such expenses can include, but are not limited to, the cost of meals, transportation for family members visiting the hospital, and personal comfort items.",
-  },
-  {
-    name: "Emergency Medical Evacuation/Repatriation (Adult <70)",
-    basic: true,
-    essential: true,
-    preferred: true,
-    tooltip: "Emergency Medical Evacuation/Repatriation (Adult <70)",
-  },
-  {
-    name: "COVID-19 coverage",
-    basic: true,
-    essential: true,
-    preferred: true,
-    tooltip:
-      "Protection against various unforeseen events related to COVID-19 that could affect your travel plans or health.",
-  },
-  {
-    name: "Pregnancy related medical expenses",
-    basic: "",
-    essential: "",
-    preferred: 10000,
-    tooltip:
-      "Coverage for unforeseen medical emergencies and complications arising from pregnancy during the covered trip.",
-  },
-  {
-    name: "Personal Liability",
-    basic: 500000,
-    essential: 1000000,
-    preferred: 1000000,
-    tooltip:
-      "Protects you if you're legally responsible for accidentally injuring someone or damaging their property while you're traveling. If, for example, you accidentally cause harm to a person or their belongings, the insurance can cover the legal expenses and damages up to the policy limit.",
-  },
-  {
-    name: "Baggage and Personal Effects",
-    basic: 20000,
-    essential: 50000,
-    preferred: 75000,
-    tooltip:
-      "Coverage for the loss, theft, damage, or destruction of your personal belongings while you are traveling",
-  },
-  {
-    name: "Home Protection	",
-    basic: 30000,
-    essential: 50000,
-    preferred: 75000,
-    tooltip:
-      "Financial compensation for damages or losses that occur to your home while you are away on your trip. This includes burglary, fire, natural disasters, and other unforeseen events that could cause damage or loss to your property and its contents.",
-  },
-  {
-    name: "Trip cancellation",
-    basic: 30000,
-    essential: 50000,
-    preferred: 75000,
-    tooltip:
-      "Reimbursement for prepaid, non-refundable travel expenses if you have to cancel your trip for a covered reason before departure. Covered reasons can include medical reasons, sever weather, employment changes and legal obligations.",
-  },
-  {
-    name: "Credit Card Indemnity for UOB Cardholders",
-    basic: 250,
-    essential: 500,
-    preferred: 750,
-    tooltip:
-      "Protects UOB cardholders against unauthorized transactions on their UOB credit card if it is lost or stolen while they are traveling.",
-  },
-  {
-    name: "Rental Vehicle Excess",
-    basic: undefined,
-    essential: 750,
-    preferred: 150000,
-    tooltip:
-      "Covers for the excess or deductible charged  by a rental car company in the event of damage to or theft of a rental vehicle during the covered trip.",
-  },
-];
-
 const discountValue = computed(() => {
   if (!promodeCode.value) {
     return defaultDiscount.value;
@@ -568,11 +476,7 @@ const discountValue = computed(() => {
   return 0; // TODO
 });
 
-const planPrice = {
-  basic: 63,
-  essential: 82,
-  preferred: 103,
-};
+const planPrice = computed(() => insuranceStore.planPricings);
 
 const discountPlanPrice = reactive({
   basic: 0,
@@ -585,17 +489,20 @@ const handleRedeem = () => {
   // TODO: check code
   isApplied.value = true;
   discountPlanPrice.basic =
-    planPrice.basic - (planPrice.basic * defaultDiscount.value) / 100;
+    planPrice.value.basic -
+    (planPrice.value.basic * defaultDiscount.value) / 100;
   discountPlanPrice.essential =
-    planPrice.essential - (planPrice.essential * defaultDiscount.value) / 100;
+    planPrice.value.essential -
+    (planPrice.value.essential * defaultDiscount.value) / 100;
   discountPlanPrice.preferred =
-    planPrice.preferred - (planPrice.preferred * defaultDiscount.value) / 100;
+    planPrice.value.preferred -
+    (planPrice.value.preferred * defaultDiscount.value) / 100;
 };
 
 const selectedPlan = ref("essential");
 
 const getToolTip = (value: string) => {
-  return items.find((item) => item.name === value)?.tooltip || "";
+  return PRICINGS_DETAILS.find((item) => item.name === value)?.tooltip || "";
 };
 
 const getPriceWithDollarSign = (amount?: number): string => {

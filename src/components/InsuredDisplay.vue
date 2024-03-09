@@ -1,6 +1,9 @@
 <template>
   <div class="d-flex flex-column display-card">
-    <v-btn variant="text" class="absolute-left-btn text-none text-blue-darken-3"
+    <v-btn
+      @click="handleEdit"
+      variant="text"
+      class="absolute-left-btn text-none text-blue-darken-3"
       ><v-icon color="blue-darken-3 mr-2">edit</v-icon> Edit</v-btn
     >
     <div class="d-flex flex-column justify-center align-left ga-10 card-detail">
@@ -15,7 +18,7 @@
       <v-container class="pa-0">
         <v-row v-for="item in Object.entries(insured)" :key="item">
           <v-col cols="5">
-            <p class="display-label">{{ item[0] }}</p>
+            <p class="display-label">{{ getFieldName(item[0]) }}</p>
           </v-col>
           <v-col cols="5">
             <p
@@ -34,6 +37,8 @@
 import { defineProps, defineEmits, computed } from "vue";
 import { pick } from "lodash";
 import moment from "moment";
+import { getFieldName } from "@/utils/common";
+import { useInformationStore } from "@/stores/InformationStore";
 
 const props = defineProps({
   type: { type: String },
@@ -41,6 +46,10 @@ const props = defineProps({
   index: { type: Number, default: 1 },
 });
 
+const emit = defineEmits(["onEdit"]);
+const handleEdit = () => {
+  emit("onEdit");
+};
 const insured = computed(() => {
   const mappedInfo = {
     fullName: props.insuredInfo?.fullName,
