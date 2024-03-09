@@ -52,6 +52,6 @@ export const fullNameRules = [
     if (/^[a-zA-Z]+(?: [a-zA-Z]+)* [a-zA-Z]+(?: [a-zA-Z]+)*$/.test(value))
       return true;
 
-    return "Full name must have at lest two word";
+    return "Full name must have at least two names";
   },
 ];
