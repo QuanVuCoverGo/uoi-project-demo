@@ -46,7 +46,7 @@
               <p class="display-bold-value">
                 {{ basicInformation.area }}
               </p>
-              <p class="display-bold-value">
+              <p class="display-value">
                 {{ getAreaDescription(basicInformation.area) }}
               </p>
             </div>

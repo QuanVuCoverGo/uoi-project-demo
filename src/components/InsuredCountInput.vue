@@ -1,8 +1,18 @@
 <template>
   <v-container class="m3-4">
     <v-row class="ga-4 w-75 p-2">
-      <v-col>
-        <div class="label mr-10">{{ label }}</div>
+      <v-col class="d-flex mr-6">
+        <div class="label">{{ label }}</div>
+          <v-tooltip v-if="tooltipContent"
+                    max-width="300"
+                    text="tooltipContent"
+                  >
+                    <template v-slot:activator="{ props }">
+                      <v-icon color="grey-lighten-1" v-bind="props"
+                        >error_outline</v-icon
+                      >
+                    </template>
+              </v-tooltip>
       </v-col>
       <v-col>
         <v-row class="ga-4">
@@ -29,7 +39,7 @@
 import { ref, computed, watch, defineProps, defineEmits } from "vue";
 import { useVModel } from "@/composables/useVModel";
 
-const props = defineProps(["label", "color", "modelValue", "min", "max"]);
+const props = defineProps(["label", "color", "modelValue", "min", "max", 'tooltipContent']);
 const { label, color, modelValue, min, max } = props;
 const emit = defineEmits("update:modelValue");
 const count = useVModel(props, "modelValue", emit);

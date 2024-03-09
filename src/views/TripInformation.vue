@@ -192,7 +192,8 @@
             :max="2"
           />
           <InsuredCountInput
-            label="Children (0 -18)"
+            label="Child(ren)"
+            :tooltipContent="'Tooltip (Children) Child is also a student up to 23 years old'"
             v-model="store.insurance.children"
             :max="7"
           />
