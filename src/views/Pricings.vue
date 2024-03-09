@@ -489,14 +489,14 @@ const handleRedeem = () => {
   // TODO: check code
   isApplied.value = true;
   discountPlanPrice.basic =
-    planPrice.value.basic -
-    (planPrice.value.basic * defaultDiscount.value) / 100;
+    planPrice.value?.basic -
+    (planPrice.value?.basic * defaultDiscount.value) / 100;
   discountPlanPrice.essential =
-    planPrice.value.essential -
-    (planPrice.value.essential * defaultDiscount.value) / 100;
+    planPrice.value?.essential -
+    (planPrice.value?.essential * defaultDiscount.value) / 100;
   discountPlanPrice.preferred =
-    planPrice.value.preferred -
-    (planPrice.value.preferred * defaultDiscount.value) / 100;
+    planPrice.value?.preferred -
+    (planPrice.value?.preferred * defaultDiscount.value) / 100;
 };
 
 const selectedPlan = ref("essential");

@@ -45,7 +45,7 @@ export type InformationState = {
   insureds: InsuredInfo;
   step: number;
   selectedPlan: string;
-  selectedPlanPrice: string;
+  selectedPlanPrice: number;
   payment: {
     cardNumber: string;
     cardName: string;
@@ -158,6 +158,7 @@ export const useInformationStore = defineStore("informations", {
             plan: "basic",
             duration: state.tripDuration,
             numberOfInsureds: state.numberOfInsureds,
+            insuredType: state.insurance.typeOfInsurance,
           });
 
           if (costPrice > max) {
