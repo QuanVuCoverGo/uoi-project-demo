@@ -13,6 +13,7 @@
       <h3 class="text-left color-blue header mb-10">Payment</h3>
     </div>
     <v-form
+      ref="paymentForm"
       class="d-flex flex-column justify-center align-center"
       @submit.prevent="handleNext"
     >
@@ -98,11 +99,14 @@ import {
   validThruRules,
 } from "@/composables/rules";
 import { useInformationStore } from "@/stores/InformationStore";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const store = useInformationStore();
 
 const router = useRouter();
+
+const paymentForm = ref();
 
 const handleUpdateCardNumber = (v: any) => {
   // Card number without dash (-)
@@ -115,8 +119,9 @@ const handleUpdateCardNumber = (v: any) => {
   store.payment.cardNumber = dashedNumber?.join("-");
 };
 
-const handleNext = () => {
-  if (!Object.values(store.payment).every((value) => Boolean(value))) return;
+const handleNext = async () => {
+  const { valid } = await paymentForm.value?.validate();
+  if (!valid) return;
   router.push({ name: "IssueFinish" });
 };
 </script>

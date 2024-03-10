@@ -290,6 +290,9 @@ export function getPricingPlan({
   numberOfInsureds,
 }: PlanPringInput & { numberOfInsureds: number; duration: number }) {
   if (duration <= 0) return 0;
+  const numberOfInsuredsShouldBeCount =
+    insuredType === "family" ? 1 : numberOfInsureds;
+
   if (tripType === "annualMulti") {
     if (duration !== 365) return 0;
     const durationPrice = planPricingLookup({
@@ -299,8 +302,9 @@ export function getPricingPlan({
       duration: "annual",
       insuredType,
     });
-    return durationPrice * numberOfInsureds;
+    return durationPrice * numberOfInsuredsShouldBeCount;
   }
+
   if (duration <= 31) {
     const durationPrice = planPricingLookup({
       tripType,
@@ -309,7 +313,7 @@ export function getPricingPlan({
       duration,
       insuredType,
     });
-    return durationPrice * numberOfInsureds;
+    return durationPrice * numberOfInsuredsShouldBeCount;
   } else {
     const durationPrice = planPricingLookup({
       tripType,
@@ -328,7 +332,7 @@ export function getPricingPlan({
     });
     const pricePerMember =
       durationPrice + numberOfWeeks * durationAdditionalWeekPrice;
-    return pricePerMember * numberOfInsureds;
+    return pricePerMember * numberOfInsuredsShouldBeCount;
   }
 }
 
@@ -337,5 +341,77 @@ export function getAreaByCountry(
 ): "area1" | "area2" | "area3" {
   if (AREA1_COUNTRIES.includes(countryName)) return "area1";
   if (AREA2_COUNTRIES.includes(countryName)) return "area1";
-  return "";
+  return "area3";
+}
+
+export function getPlanPricings({
+  tripType,
+  insuredType,
+  area,
+  duration,
+  numberOfInsureds,
+  destinations,
+}: Partial<PlanPringInput> & {
+  numberOfInsureds: number;
+  duration: number;
+  destinations: string[];
+}) {
+  if (!(destinations.length || area) || !tripType || !insuredType) return;
+  if (tripType === "annualMulti" && !area) return;
+
+  let selectedArea = "area3";
+
+  if (tripType === "single") {
+    // array
+    let max = 0;
+    for (let index = 0; index < destinations.length; index++) {
+      const country = destinations[index];
+
+      const userArea =
+        tripType === "single" ? getAreaByCountry(country) : area || "area3";
+
+      const costPrice = getPricingPlan({
+        tripType: tripType,
+        area: userArea,
+        plan: "basic",
+        duration: duration,
+        numberOfInsureds: numberOfInsureds,
+        insuredType: insuredType,
+      });
+
+      if (costPrice > max) {
+        max = costPrice;
+        selectedArea = getAreaByCountry(country);
+      }
+    }
+  } else {
+    selectedArea = area || selectedArea;
+  }
+
+  return {
+    basic: getPricingPlan({
+      tripType: tripType,
+      area: selectedArea,
+      plan: "basic",
+      duration: duration,
+      insuredType: insuredType,
+      numberOfInsureds: numberOfInsureds,
+    }),
+    essential: getPricingPlan({
+      tripType: tripType,
+      area: selectedArea,
+      plan: "essential",
+      duration: duration,
+      insuredType: insuredType,
+      numberOfInsureds: numberOfInsureds,
+    }),
+    preferred: getPricingPlan({
+      tripType: tripType,
+      area: selectedArea,
+      plan: "preferred",
+      duration: duration,
+      insuredType: insuredType,
+      numberOfInsureds: numberOfInsureds,
+    }),
+  };
 }

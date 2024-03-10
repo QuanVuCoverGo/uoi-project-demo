@@ -12,15 +12,15 @@
         <v-text-field
           variant="outlined"
           label="Full name"
-          class="w-100 mb-3"
+          class="w-100 mb-2"
           hint="As per NRIC/passport"
-          :rules="getRequiredRules('Full name')"
+          :rules="fullNameRules"
           persistent-hint
           v-model="inputValue.fullName"
         >
         </v-text-field>
         <date-picker
-          class="w-100"
+          class="w-100 mb-2"
           color="primary"
           label="Date of birth"
           :rules="getRequiredRules('Date of birth')"
@@ -30,7 +30,7 @@
 
         <v-text-field
           variant="outlined"
-          class="w-100"
+          class="w-100 mb-2"
           label="NRIC or passport number"
           type="password"
           :rules="getRequiredRules('NRIC or passport number')"
@@ -42,7 +42,7 @@
   </v-card>
 </template>
 <script setup>
-import { getRequiredRules } from "@/composables/rules";
+import { getRequiredRules, fullNameRules } from "@/composables/rules";
 import { useVModel } from "@/composables/useVModel";
 import { defineProps, defineEmits } from "vue";
 

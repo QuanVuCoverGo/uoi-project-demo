@@ -1,10 +1,13 @@
 <template>
-  <v-form class="d-flex flex-column" @submit.prevent="handleNext">
+  <v-form
+    ref="tripForm"
+    class="d-flex flex-column"
+    @submit.prevent="handleNext"
+  >
     <v-card
       width="800"
       class="d-flex flex-column justify-center self-center pa-10 mb-10"
     >
-    <pre>{{ minEndDate }}</pre>
       <h3 class="text-center color-blue header">Where and when</h3>
       <v-container fluid>
         <VGroupItems label="Select type of insurance">
@@ -161,7 +164,7 @@
             >
               You will be insured for
               <span class="font-weight-bold"
-                >{{store.tripDuration }} days</span
+                >{{ store.tripDuration }} days</span
               >
             </p>
             <p v-else class="insuredDays ml-2">
@@ -245,19 +248,22 @@ import { emailRules, getRequiredRules } from "@/composables/rules";
 
 const store = useInformationStore();
 const router = useRouter();
+const tripForm = ref();
 
 const tripType = ref();
 const insuredsType = ref();
 
 const minDate = moment().toDate();
-const minEndDate = computed(() => moment(store.insurance.startDate).add(1, "day").toDate());
-const maxDate = computed(() => moment(store.insurance.startDate).add(185, "day").toDate());
+const minEndDate = computed(() =>
+  moment(store.insurance.startDate).add(1, "day").toDate()
+);
+const maxDate = computed(() =>
+  moment(store.insurance.startDate).add(185, "day").toDate()
+);
 
-
-
-const handleNext = () => {
-  if (!store.insurance.email || !/.+@.+\..+/.test(store.insurance.email))
-    return;
+const handleNext = async () => {
+  const { valid } = await tripForm.value?.validate();
+  if (!valid) return;
   store.insurance = { ...store.insurance };
   store.step = 2;
 };
@@ -265,7 +271,7 @@ const handleNext = () => {
 watch(
   () => store.insurance.startDate,
   (v) => {
-    if(store.insurance.endDate && store.tripDuration > 0) return
+    if (store.insurance.endDate && store.tripDuration > 0) return;
     if (v) {
       if (store.insurance.typeOfInsuranceTrip === "single")
         store.insurance.endDate = moment(v).add(7, "day").toDate();

@@ -12,7 +12,11 @@
     <div class="d-flex justify-center align-center">
       <h3 class="text-left color-blue header mb-10">Who will be insured</h3>
     </div>
-    <v-form class="d-flex flex-column" @submit.prevent="handleNext">
+    <v-form
+      ref="applicantForm"
+      class="d-flex flex-column"
+      @submit.prevent="handleNext"
+    >
       <div class="d-flex flex-column justify-center align-center ga-16">
         <v-card style="padding: 30px 70px" class="applicant-card">
           <template v-slot:title>
@@ -48,9 +52,9 @@
               >
               </date-picker>
               <v-text-field
+                type="number"
                 variant="outlined"
                 class="w-100"
-                type="password"
                 label="NRIC or passport number"
                 :rules="getRequiredRules('NRIC or passport number')"
                 v-model="store.insureds.NRICorPassport"
@@ -58,10 +62,11 @@
               </v-text-field>
               <div class="mt-4 w-100">
                 <p class="section-text">Address</p>
-                <v-row>
+                <v-row class="mb-1">
                   <v-col>
                     <v-text-field
                       variant="outlined"
+                      type="number"
                       label="Floor/Unit number"
                       :rules="getRequiredRules('Floor/Unit number')"
                       v-model="store.insureds.address.floorOrUnitNumber"
@@ -82,6 +87,7 @@
                   label="Building"
                   :rules="getRequiredRules('Building')"
                   v-model="store.insureds.address.building"
+                  class="mb-1"
                 />
 
                 <v-text-field
@@ -89,13 +95,16 @@
                   label="Street"
                   :rules="getRequiredRules('Street')"
                   v-model="store.insureds.address.street"
+                  class="mb-1"
                 />
 
                 <v-text-field
                   variant="outlined"
+                  type="number"
                   label="PostalCode"
                   :rules="getRequiredRules('PostalCode')"
                   v-model="store.insureds.address.postalCode"
+                  class="mb-1"
                 />
               </div>
             </div>
@@ -171,27 +180,15 @@ import { getRequiredRules, fullNameRules } from "@/composables/rules";
 
 const store = useInformationStore();
 
+const applicantForm = ref();
+
 const isIndividualPlan = computed(
   () => store.insurance.typeOfInsurance === "individual"
 );
 
-const checkIfIsValidObject = (object) => {
-  return Object.values(object).every((value) => Boolean(value));
-};
-
-const handleNext = () => {
-  if (!checkIfIsValidObject(store.insureds)) return;
-  const isInvalid = store.insureds.travellers?.find(
-    (item) => !checkIfIsValidObject(item)
-  );
-  const isInvalidAdult = store.insureds.adults?.find(
-    (item) => !checkIfIsValidObject(item)
-  );
-  const isInvalidChild = store.insureds.children?.find(
-    (item) => !checkIfIsValidObject(item)
-  );
-
-  if (isInvalid || isInvalidAdult || isInvalidChild) return;
+const handleNext = async () => {
+  const { valid } = await applicantForm.value?.validate();
+  if (!valid) return;
 
   store.step = 4;
 };
@@ -229,7 +226,7 @@ onBeforeMount(() => {
     const children = store.insureds.children?.sort() || [];
     const list = [];
     for (let index = 0; index < store.insurance?.children; index++) {
-      const i = store.insurance?.adults?.length + index;
+      const i = store.insureds?.adults?.length + index;
       const existed = children[i];
       const childrenItem = {
         id: existed?.id || uuid(),

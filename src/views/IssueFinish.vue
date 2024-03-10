@@ -28,7 +28,7 @@
                 }}
                 to {{ moment(store.insurance.endDate).format("DD MMMM YYYY") }}.
               </p>
-              <v-btn class="text-none text-purple-darken-2" variant="outlined"
+              <v-btn href="https://drive.google.com/drive/u/0/home" target="_blank" class="text-none text-purple-darken-2" variant="outlined"
                 >View policy</v-btn
               >
             </div>

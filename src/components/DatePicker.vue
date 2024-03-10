@@ -5,11 +5,11 @@
         :label="label"
         :model-value="formattedDate"
         readonly
-        v-bind="props"
         variant="outlined"
         :disabled="disabled"
         :rules="rules"
-        class="w-100"
+        class="w-100 mb-2"
+        v-bind="props"
       ></v-text-field>
     </template>
     <v-date-picker

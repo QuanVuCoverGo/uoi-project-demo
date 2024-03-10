@@ -1,4 +1,4 @@
-import { getAreaByCountry, getPricingPlan } from "@/utils/pricingMapping";
+import { getAreaByCountry, getPlanPricings, getPricingPlan } from "@/utils/pricingMapping";
 import moment from "moment";
 import { defineStore } from "pinia";
 
@@ -126,76 +126,16 @@ export const useInformationStore = defineStore("informations", {
     planPricings(
       state
     ): { basic: number; essential: number; preferred: number } | undefined {
-      if (
-        !(state.insurance.destinations.length || state.insurance.area) ||
-        !state.insurance.typeOfInsuranceTrip ||
-        !state.insurance.typeOfInsurance
-      )
-        return;
-      if (
-        state.insurance?.typeOfInsuranceTrip === "annualMulti" &&
-        !state.insurance.area
-      )
-        return;
-
-      let selectedArea = "area3";
-
-      if (state.insurance?.typeOfInsuranceTrip === "single") {
-        // array
-        const destinations = [...state.insurance.destinations];
-        let max = 0;
-        for (let index = 0; index < destinations.length; index++) {
-          const country = destinations[index];
-
-          const area =
-            state.insurance?.typeOfInsuranceTrip === "single"
-              ? getAreaByCountry(country)
-              : state.insurance.area || "area3";
-
-          const costPrice = getPricingPlan({
-            tripType: state.insurance.typeOfInsuranceTrip,
-            area,
-            plan: "basic",
-            duration: state.tripDuration,
-            numberOfInsureds: state.numberOfInsureds,
-            insuredType: state.insurance.typeOfInsurance,
-          });
-
-          if (costPrice > max) {
-            max = costPrice;
-            selectedArea = getAreaByCountry(country);
-          }
-        }
-      } else {
-        selectedArea = state.insurance.area || selectedArea;
-      }
-
-      return {
-        basic: getPricingPlan({
-          tripType: state.insurance.typeOfInsuranceTrip,
-          area: selectedArea,
-          plan: "basic",
-          duration: state.tripDuration,
-          insuredType: state.insurance.typeOfInsurance,
-          numberOfInsureds: state.numberOfInsureds,
-        }),
-        essential: getPricingPlan({
-          tripType: state.insurance.typeOfInsuranceTrip,
-          area: selectedArea,
-          plan: "essential",
-          duration: state.tripDuration,
-          insuredType: state.insurance.typeOfInsurance,
-          numberOfInsureds: state.numberOfInsureds,
-        }),
-        preferred: getPricingPlan({
-          tripType: state.insurance.typeOfInsuranceTrip,
-          area: selectedArea,
-          plan: "preferred",
-          duration: state.tripDuration,
-          insuredType: state.insurance.typeOfInsurance,
-          numberOfInsureds: state.numberOfInsureds,
-        }),
-      };
+      return getPlanPricings({
+        numberOfInsureds: this.numberOfInsureds,
+        tripType: state.insurance.typeOfInsuranceTrip,
+        insuredType: state.insurance.typeOfInsurance,
+        area: state.insurance.area,
+        duration: this.tripDuration,
+        destinations: state.insurance.destinations,
+      });
     },
   },
 });
+
+

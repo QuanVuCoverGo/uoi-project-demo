@@ -12,6 +12,16 @@ export const emailRules = [
 ];
 
 export const getRequiredRules = (fieldName: string) => {
+  if (fieldName === "Destination") {
+    return [
+      (value: string[]) => {
+        if (value.length) return true;
+
+        return fieldName + " is required.";
+      },
+    ];
+  }
+
   return [
     (value: any) => {
       if (value) return true;

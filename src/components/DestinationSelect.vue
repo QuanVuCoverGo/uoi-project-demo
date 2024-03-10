@@ -11,6 +11,7 @@
     closable-chips
     hint="If you visit more than one country, select the furthest country"
     persistent-hint
+    v-bind="props"
     multiple
   >
     <template v-slot:chip="{ props, item }">
@@ -32,12 +33,13 @@
   </v-autocomplete>
 </template>
 <script setup>
+import { getRequiredRules } from "@/composables/rules";
 import { useVModel } from "@/composables/useVModel";
 import { COUNTRIES_WITH_FLAG } from "@/constants";
 import { defineProps, defineEmits } from "vue";
 
 const props = defineProps({
-  label: { type: String, default: "Select" },
+  label: { type: String, default: "Destination" },
   modelValue: { type: Object },
   showLabel: { type: Boolean, default: false },
 });

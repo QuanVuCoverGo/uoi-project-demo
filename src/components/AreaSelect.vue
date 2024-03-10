@@ -10,6 +10,7 @@
     chips
     closable-chips
     persistent-hint
+    v-bind="props"
   >
     <template v-slot:item="{ props, item }">
       <v-list-item
@@ -27,7 +28,7 @@ import { defineProps, defineEmits } from "vue";
 import { AREAS_LIST } from "@/constants";
 
 const props = defineProps({
-  label: { type: String, default: "Select" },
+  label: { type: String, default: "Area" },
   modelValue: { type: String },
   showLabel: { type: Boolean, default: false },
 });
