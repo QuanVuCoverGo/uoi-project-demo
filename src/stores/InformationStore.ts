@@ -109,11 +109,11 @@ export const useInformationStore = defineStore("informations", {
     tripDuration(state): number {
       if (state.insurance?.typeOfInsuranceTrip === "annualMulti") return 365;
 
-      return moment
+      return Math.ceil(moment
         .duration(
           moment(state.insurance.endDate)?.diff(state.insurance.startDate)
         )
-        .asDays();
+        .asDays());
     },
     numberOfInsureds(state): number {
       if (!state.insurance.typeOfInsurance) return 0;

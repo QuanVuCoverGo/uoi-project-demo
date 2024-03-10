@@ -4,6 +4,7 @@
       width="800"
       class="d-flex flex-column justify-center self-center pa-10 mb-10"
     >
+    <pre>{{ minEndDate }}</pre>
       <h3 class="text-center color-blue header">Where and when</h3>
       <v-container fluid>
         <VGroupItems label="Select type of insurance">
@@ -142,6 +143,7 @@
                 v-model="store.insurance.endDate"
                 color="primary"
                 :maxDate="maxDate"
+                :minDate="minEndDate"
                 :rules="getRequiredRules('End Date')"
             /></v-col>
           </v-row>
@@ -159,7 +161,7 @@
             >
               You will be insured for
               <span class="font-weight-bold"
-                >{{ Math.ceil(numberOfDays) }} days</span
+                >{{store.tripDuration }} days</span
               >
             </p>
             <p v-else class="insuredDays ml-2">
@@ -248,13 +250,10 @@ const tripType = ref();
 const insuredsType = ref();
 
 const minDate = moment().toDate();
-const maxDate = moment(store.insurance.startDate).add(185, "day").toDate();
+const minEndDate = computed(() => moment(store.insurance.startDate).add(1, "day").toDate());
+const maxDate = computed(() => moment(store.insurance.startDate).add(185, "day").toDate());
 
-const numberOfDays = computed(() =>
-  moment
-    .duration(moment(store.insurance.endDate)?.diff(store.insurance.startDate))
-    .asDays()
-);
+
 
 const handleNext = () => {
   if (!store.insurance.email || !/.+@.+\..+/.test(store.insurance.email))
@@ -266,6 +265,7 @@ const handleNext = () => {
 watch(
   () => store.insurance.startDate,
   (v) => {
+    if(store.insurance.endDate && store.tripDuration > 0) return
     if (v) {
       if (store.insurance.typeOfInsuranceTrip === "single")
         store.insurance.endDate = moment(v).add(7, "day").toDate();
