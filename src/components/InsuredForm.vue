@@ -32,7 +32,6 @@
           variant="outlined"
           class="w-100 mb-2"
           label="NRIC or passport number"
-          type="password"
           :rules="getRequiredRules('NRIC or passport number')"
           v-model="inputValue.NRICorPassport"
         >

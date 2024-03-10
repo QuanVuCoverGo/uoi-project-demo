@@ -1,4 +1,5 @@
 <template>
+  <pre>{{ store.tripDuration }}</pre>
   <v-form
     ref="tripForm"
     class="d-flex flex-column"
@@ -271,11 +272,11 @@ const handleNext = async () => {
 watch(
   () => store.insurance.startDate,
   (v) => {
+    if (store.insurance.typeOfInsuranceTrip === "annualMulti")
+      store.insurance.endDate = moment(v).add(365, "day").toDate();
     if (store.insurance.endDate && store.tripDuration > 0) return;
-    if (v) {
-      if (store.insurance.typeOfInsuranceTrip === "single")
-        store.insurance.endDate = moment(v).add(7, "day").toDate();
-      else store.insurance.endDate = moment(v).add(365, "day").toDate();
+    if (v && store.insurance.typeOfInsuranceTrip === "single") {
+      store.insurance.endDate = moment(v).add(7, "day").toDate();
     }
   },
   {

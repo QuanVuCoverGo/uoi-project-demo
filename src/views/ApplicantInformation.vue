@@ -52,7 +52,6 @@
               >
               </date-picker>
               <v-text-field
-                type="number"
                 variant="outlined"
                 class="w-100"
                 label="NRIC or passport number"
@@ -66,7 +65,6 @@
                   <v-col>
                     <v-text-field
                       variant="outlined"
-                      type="number"
                       label="Floor/Unit number"
                       :rules="getRequiredRules('Floor/Unit number')"
                       v-model="store.insureds.address.floorOrUnitNumber"
