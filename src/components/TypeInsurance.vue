@@ -1,12 +1,15 @@
 <template>
   <div class="groups mb-2">
     <v-item-group
-      class="d-flex justify-space-around flex-row"
+      class="d-flex justify-space-between flex-row"
       v-model="typeOfInsurance"
     >
       <v-item v-slot="{ isSelected, toggle }">
         <v-card
-          :class="['d-flex align-center pa-4 card-no-shadow']"
+          :class="[
+            'd-flex align-center pa-4 card-no-shadow w-100 justify-center mr-4',
+            isSelected ? 'blue-border' : '',
+          ]"
           height="191"
           :color="isSelected ? 'white' : 'grey-lighten-3'"
           dark
@@ -42,7 +45,10 @@
       </v-item>
       <v-item v-slot="{ isSelected, toggle }">
         <v-card
-          :class="['d-flex align-center pa-4 card-no-shadow']"
+          :class="[
+            'd-flex align-center pa-4 card-no-shadow w-100 justify-center ml-4',
+            isSelected ? 'blue-border' : '',
+          ]"
           height="191"
           :color="isSelected ? 'white' : 'grey-lighten-3'"
           dark

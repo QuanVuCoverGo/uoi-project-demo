@@ -1,5 +1,4 @@
 <template>
-  <pre>{{ store.tripDuration }}</pre>
   <v-form
     ref="tripForm"
     class="d-flex flex-column"
@@ -13,13 +12,17 @@
       <v-container fluid>
         <VGroupItems label="Select type of insurance">
           <v-item-group
-            class="d-flex justify-space-around flex-row"
+            class="d-flex justify-space-between flex-row"
             v-model="tripType"
           >
             <v-item v-slot="{ isSelected, toggle }">
               <v-card
-                :class="['d-flex align-center pa-4 card-no-shadow']"
+                :class="[
+                  'd-flex align-center pa-4 card-no-shadow w-100 justify-center mr-4',
+                  isSelected ? 'blue-border' : '',
+                ]"
                 min-height="191"
+                width="292"
                 :color="isSelected ? 'white' : 'grey-lighten-3'"
                 dark
                 @click="!isSelected && toggle?.()"
@@ -60,7 +63,10 @@
             </v-item>
             <v-item v-slot="{ isSelected, toggle }">
               <v-card
-                :class="['d-flex align-center pa-4 card-no-shadow']"
+                :class="[
+                  'd-flex align-center pa-4 card-no-shadow w-100 justify-center ml-4',
+                  isSelected ? 'blue-border' : '',
+                ]"
                 min-height="191"
                 :color="isSelected ? 'white' : 'grey-lighten-3'"
                 dark
@@ -319,4 +325,8 @@ onBeforeMount(() => {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style></style>
+<style>
+.blue-border {
+  border: 2px solid #397ded !important;
+}
+</style>
